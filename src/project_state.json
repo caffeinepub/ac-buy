@@ -1,12 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
+  "projectStateVersion": 29,
   "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
   "architectural_notes": [
     "Admin dashboard currently has no authentication - publicly accessible by anyone who visits /admin route"
   ],
   "known_issues": [
-    "Admin dashboard navigation link not appearing in header menu for user"
+    "Owner contact details are not appearing when customer submits quote",
+    "Admin Dashboard login not working when clicking on it"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -129,6 +130,142 @@
         "REQ-19"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-proper-error-handling-and-logging-in-the-frontend-usequeries-ts-getallsubmissions-hook-to-catch-and-display-specific-error-messages-when-the-backend-call-fails",
+      "title": "Add proper error handling and logging in the frontend useQueries.ts getAllSubmissions hook to catch and display specific error messages when the backend call fails",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-tsx-page-to-display-a-more-specific-error-message-when-the-submissions-query-fails-including-retry-functionality-and-troubleshooting-guidance",
+      "title": "Update the Admin.tsx page to display a more specific error message when the submissions query fails, including retry functionality and troubleshooting guidance",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pricinginfo-tsx-page-to-add-a-dynamic-pricing-calculator-section-that-displays-estimated-prices-based-on-ac-age-and-condition-for-ac-age-2-3-years-in-good-condition-show-3-000-4-000-for-ac-age-3-5-years-show-2-500-for-dead-non-functional-ac-show-2-000",
+      "title": "Update the PricingInfo.tsx page to add a dynamic pricing calculator section that displays estimated prices based on AC age and condition: for AC age 2-3 years in good condition show ₹3,000-4,000; for AC age 3-5 years show ₹2,500; for dead/non-functional AC show ₹2,000",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-interactive-inputs-or-dropdowns-to-the-pricing-calculator-allowing-customers-to-select-ac-age-range-2-3-years-3-5-years-or-dead-non-functional-and-condition-to-see-the-corresponding-estimated-price-displayed-immediately",
+      "title": "Add interactive inputs or dropdowns to the pricing calculator allowing customers to select AC age range (2-3 years, 3-5 years, or dead/non-functional) and condition to see the corresponding estimated price displayed immediately",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-ac-submission-form-error-in-frontend-src-components-acsubmissionform-tsx-by-adding-comprehensive-error-handling-logging-the-exact-error-message-to-the-console-and-displaying-a-user-friendly-error-message-when-the-submission-fails",
+      "title": "Debug and fix the AC submission form error in frontend/src/components/ACSubmissionForm.tsx by adding comprehensive error handling, logging the exact error message to the console, and displaying a user-friendly error message when the submission fails",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-useacsubmission-hook-in-frontend-src-hooks-useacsubmission-ts-to-properly-catch-and-propagate-backend-errors-with-detailed-error-information-including-the-error-type-and-message",
+      "title": "Update the useACSubmission hook in frontend/src/hooks/useACSubmission.ts to properly catch and propagate backend errors with detailed error information including the error type and message",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-form-field-validation-in-acsubmissionform-tsx-to-prevent-submission-of-invalid-data-including-checks-for-non-empty-brand-model-valid-age-range-0-20-years-valid-condition-selection-and-properly-formatted-phone-email",
+      "title": "Add form field validation in ACSubmissionForm.tsx to prevent submission of invalid data, including checks for non-empty brand/model, valid age range (0-20 years), valid condition selection, and properly formatted phone/email",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-submissionsuccess-tsx-page-to-accept-and-display-the-submitted-customer-contact-details-name-phone-email-that-were-entered-in-the-ac-submission-form",
+      "title": "Update the SubmissionSuccess.tsx page to accept and display the submitted customer contact details (name, phone, email) that were entered in the AC submission form",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-acsubmissionform-tsx-component-to-pass-the-submitted-customer-contact-details-customername-phone-email-to-the-success-page-via-navigation-state-when-the-submission-is-successful",
+      "title": "Update the ACSubmissionForm.tsx component to pass the submitted customer contact details (customerName, phone, email) to the success page via navigation state when the submission is successful",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-submissionsuccess-tsx-page-to-correctly-display-the-owner-s-contact-details-business-phone-numbers-889700937-6304843930-917095510215-when-a-customer-successfully-submits-a-quote-ensuring-these-contact-details-are-visible-and-properly-formatted",
+      "title": "Fix the SubmissionSuccess.tsx page to correctly display the owner's contact details (business phone numbers: 889700937, 6304843930, +917095510215) when a customer successfully submits a quote, ensuring these contact details are visible and properly formatted",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-admin-dashboard-authentication-flow-to-properly-trigger-internet-identity-login-when-users-click-on-the-admin-dashboard-link-in-the-navigation-ensuring-the-authentication-dialog-appears-and-users-can-successfully-authenticate-before-accessing-the-admin-page",
+      "title": "Fix the Admin Dashboard authentication flow to properly trigger Internet Identity login when users click on the Admin Dashboard link in the navigation, ensuring the authentication dialog appears and users can successfully authenticate before accessing the admin page",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-admin-dashboard-navigation-button-click-handler-in-frontend-src-components-layout-tsx-to-ensure-it-properly-triggers-the-internet-identity-login-dialog-when-the-user-is-not-authenticated",
+      "title": "Debug and fix the Admin Dashboard navigation button click handler in frontend/src/components/Layout.tsx to ensure it properly triggers the Internet Identity login dialog when the user is not authenticated",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-error-handling-and-user-feedback-in-the-admin-dashboard-button-click-handler-to-display-a-loading-state-during-authentication-and-show-error-messages-if-the-login-process-fails",
+      "title": "Add error handling and user feedback in the Admin Dashboard button click handler to display a loading state during authentication and show error messages if the login process fails",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-debug-the-admin-dashboard-button-click-handler-in-frontend-src-components-layout-tsx-to-identify-why-the-internet-identity-login-dialog-is-not-appearing-when-clicking-the-admin-dashboard-navigation-button",
+      "title": "Debug the Admin Dashboard button click handler in frontend/src/components/Layout.tsx to identify why the Internet Identity login dialog is not appearing when clicking the Admin Dashboard navigation button",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-internet-identity-login-trigger-in-the-admin-dashboard-navigation-flow-to-ensure-the-login-dialog-appears-immediately-when-an-unauthenticated-user-clicks-the-admin-dashboard-button",
+      "title": "Fix the Internet Identity login trigger in the Admin Dashboard navigation flow to ensure the login dialog appears immediately when an unauthenticated user clicks the Admin Dashboard button",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-in-the-admin-dashboard-click-handler-to-catch-any-errors-during-the-authentication-flow-and-display-user-friendly-error-messages-when-the-login-process-fails",
+      "title": "Add comprehensive error handling in the Admin Dashboard click handler to catch any errors during the authentication flow and display user-friendly error messages when the login process fails",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-useinternetidentity-hook-s-login-function-is-properly-resolving-and-handling-the-authentication-callback-ensuring-it-completes-the-authentication-process-successfully",
+      "title": "Verify that the useInternetIdentity hook's login() function is properly resolving and handling the authentication callback, ensuring it completes the authentication process successfully",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -197,6 +334,70 @@
       "summary": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL that can be shared with customers",
       "reqIds": [
         "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Debug and fix the backend getAllSubmissions function in backend/main.mo to ensure it correctly retrieves and returns all customer AC submission data without errors",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Verify that the backend authentication check in getAllSubmissions properly validates the authenticated principal and does not reject legitimate authenticated users",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Update pricing guidelines to show age-based pricing tiers: 2-3 years = ₹3000-4000, 3-5 years = ₹2500, dead AC = ₹2000",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Add validation and error handling to the backend submitAC function in backend/main.mo to catch and return descriptive error messages for invalid submissions (missing fields, invalid data formats, or storage failures)",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Fix issue where customer contact details are not displayed after submitting the AC quote form",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Fix issue where owner contact details are not appearing when customer submits quote",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Fix Admin Dashboard login functionality - clicking on Admin Dashboard should trigger authentication/login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Update the Admin.tsx page to implement proper authentication flow checking - if user is not authenticated when accessing /admin route, display the login prompt and trigger the Internet Identity authentication process automatically",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Verify that the useInternetIdentity hook's login() function in frontend/src/hooks/useInternetIdentity.ts properly initializes the AuthClient and handles the authentication callback correctly",
+      "reqIds": [
+        "REQ-37"
       ],
       "status": "pending"
     }

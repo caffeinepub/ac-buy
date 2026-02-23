@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add Admin Dashboard link to the mobile navigation menu so authenticated users can access the admin panel from mobile devices.
+**Goal:** Fix the Admin Dashboard authentication flow so the Internet Identity login dialog appears when clicking the Admin Dashboard button.
 
 **Planned changes:**
-- Add Admin Dashboard navigation link to the mobile hamburger menu in the Layout component
-- Ensure the Admin Dashboard link appears alongside existing menu items (Home, Submit AC, Pricing Info, Contact)
-- Maintain conditional rendering based on authentication state
+- Debug and add console logging to the Admin Dashboard button click handler to identify why the login dialog is not appearing
+- Fix the Internet Identity login trigger to display the dialog immediately when unauthenticated users click Admin Dashboard
+- Add comprehensive error handling with user-friendly error messages for authentication failures
+- Verify the useInternetIdentity hook's login() function properly resolves and completes authentication
 
-**User-visible outcome:** When users open the mobile menu, they will see the Admin Dashboard option and can navigate to the admin panel by clicking it.
+**User-visible outcome:** When clicking the Admin Dashboard button while not authenticated, the Internet Identity login dialog will appear immediately, and after successful login, users will be automatically navigated to the admin dashboard.

@@ -7,7 +7,13 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export type Time = bigint;
+export type SubmissionResult = {
+    __kind__: "error";
+    error: string;
+} | {
+    __kind__: "success";
+    success: string;
+};
 export interface Submission {
     age: bigint;
     customerName: string;
@@ -18,12 +24,17 @@ export interface Submission {
     phone: string;
     condition: Condition;
 }
-export interface Condition {
-    description: string;
+export type Time = bigint;
+export enum Condition {
+    new_ = "new",
+    good = "good",
+    poor = "poor",
+    average = "average",
+    excellent = "excellent"
 }
 export interface backendInterface {
     getAllCustomerContacts(): Promise<Array<[string, string, string, string]>>;
     getAllSubmissions(): Promise<Array<Submission>>;
     getSubmission(id: string): Promise<Submission | null>;
-    submitAirConditioner(brand: string, model: string, age: bigint, condition: Condition, customerName: string, phone: string, email: string): Promise<boolean>;
+    submitAC(brand: string, model: string, age: bigint, condition: Condition, customerName: string, phone: string, email: string): Promise<SubmissionResult>;
 }

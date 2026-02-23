@@ -3,9 +3,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useACSubmission } from '@/hooks/useACSubmission';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { Condition } from '@/backend';
 
 export default function ACSubmissionForm() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function ACSubmissionForm() {
     brand: '',
     model: '',
     age: '',
-    condition: '',
+    condition: '' as Condition | '',
     customerName: '',
     phone: '',
     email: '',
@@ -26,18 +27,39 @@ export default function ACSubmissionForm() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.brand.trim()) newErrors.brand = 'Brand is required';
-    if (!formData.model.trim()) newErrors.model = 'Model is required';
-    if (!formData.age || parseInt(formData.age) < 0) {
-      newErrors.age = 'Please enter a valid age';
+    if (!formData.brand.trim()) {
+      newErrors.brand = 'Brand is required';
     }
-    if (!formData.condition.trim()) newErrors.condition = 'Condition description is required';
-    if (!formData.customerName.trim()) newErrors.customerName = 'Name is required';
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    
+    if (!formData.model.trim()) {
+      newErrors.model = 'Model is required';
+    }
+    
+    const ageNum = parseInt(formData.age);
+    if (!formData.age || isNaN(ageNum) || ageNum < 0) {
+      newErrors.age = 'Please enter a valid age (0 or greater)';
+    } else if (ageNum > 20) {
+      newErrors.age = 'Age seems too high. Please verify (max 20 years)';
+    }
+    
+    if (!formData.condition) {
+      newErrors.condition = 'Please select a condition';
+    }
+    
+    if (!formData.customerName.trim()) {
+      newErrors.customerName = 'Name is required';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
+    }
+    
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Please enter a valid email address';
     }
 
     setErrors(newErrors);
@@ -47,20 +69,42 @@ export default function ACSubmissionForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
-
-    const success = await submitAC({
-      brand: formData.brand,
-      model: formData.model,
-      age: BigInt(parseInt(formData.age)),
-      condition: { description: formData.condition },
-      customerName: formData.customerName,
-      phone: formData.phone,
-      email: formData.email,
+    console.log('[ACSubmissionForm] Form submission started', {
+      timestamp: new Date().toISOString(),
+      formData: { ...formData, age: formData.age }
     });
 
-    if (success) {
-      navigate({ to: '/success' });
+    if (!validateForm()) {
+      console.warn('[ACSubmissionForm] Form validation failed', errors);
+      return;
+    }
+
+    try {
+      const success = await submitAC({
+        brand: formData.brand.trim(),
+        model: formData.model.trim(),
+        age: BigInt(parseInt(formData.age)),
+        condition: formData.condition as Condition,
+        customerName: formData.customerName.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+      });
+
+      if (success) {
+        console.log('[ACSubmissionForm] Submission successful, navigating to success page with contact details');
+        navigate({ 
+          to: '/success',
+          state: {
+            customerName: formData.customerName.trim(),
+            phone: formData.phone.trim(),
+            email: formData.email.trim(),
+          }
+        });
+      } else {
+        console.error('[ACSubmissionForm] Submission failed (returned false)');
+      }
+    } catch (err) {
+      console.error('[ACSubmissionForm] Unexpected error during submission:', err);
     }
   };
 
@@ -82,8 +126,14 @@ export default function ACSubmissionForm() {
             value={formData.brand}
             onChange={(e) => handleChange('brand', e.target.value)}
             className={errors.brand ? 'border-destructive' : ''}
+            disabled={isSubmitting}
           />
-          {errors.brand && <p className="text-sm text-destructive">{errors.brand}</p>}
+          {errors.brand && (
+            <p className="text-sm text-destructive flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              {errors.brand}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -94,36 +144,67 @@ export default function ACSubmissionForm() {
             value={formData.model}
             onChange={(e) => handleChange('model', e.target.value)}
             className={errors.model ? 'border-destructive' : ''}
+            disabled={isSubmitting}
           />
-          {errors.model && <p className="text-sm text-destructive">{errors.model}</p>}
+          {errors.model && (
+            <p className="text-sm text-destructive flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              {errors.model}
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="age">Age (in years) *</Label>
-        <Input
-          id="age"
-          type="number"
-          min="0"
-          placeholder="e.g., 3"
-          value={formData.age}
-          onChange={(e) => handleChange('age', e.target.value)}
-          className={errors.age ? 'border-destructive' : ''}
-        />
-        {errors.age && <p className="text-sm text-destructive">{errors.age}</p>}
-      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label htmlFor="age">Age (in years) *</Label>
+          <Input
+            id="age"
+            type="number"
+            min="0"
+            max="20"
+            placeholder="e.g., 3"
+            value={formData.age}
+            onChange={(e) => handleChange('age', e.target.value)}
+            className={errors.age ? 'border-destructive' : ''}
+            disabled={isSubmitting}
+          />
+          {errors.age && (
+            <p className="text-sm text-destructive flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              {errors.age}
+            </p>
+          )}
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="condition">Condition Description *</Label>
-        <Textarea
-          id="condition"
-          placeholder="Please describe the condition of your AC unit (e.g., working perfectly, minor issues, needs repair, etc.)"
-          rows={4}
-          value={formData.condition}
-          onChange={(e) => handleChange('condition', e.target.value)}
-          className={errors.condition ? 'border-destructive' : ''}
-        />
-        {errors.condition && <p className="text-sm text-destructive">{errors.condition}</p>}
+        <div className="space-y-2">
+          <Label htmlFor="condition">Condition *</Label>
+          <Select
+            value={formData.condition}
+            onValueChange={(value) => handleChange('condition', value)}
+            disabled={isSubmitting}
+          >
+            <SelectTrigger
+              id="condition"
+              className={errors.condition ? 'border-destructive' : ''}
+            >
+              <SelectValue placeholder="Select condition" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={Condition.new_}>Brand New</SelectItem>
+              <SelectItem value={Condition.excellent}>Excellent</SelectItem>
+              <SelectItem value={Condition.good}>Good</SelectItem>
+              <SelectItem value={Condition.average}>Average</SelectItem>
+              <SelectItem value={Condition.poor}>Poor</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.condition && (
+            <p className="text-sm text-destructive flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              {errors.condition}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="border-t pt-6">
@@ -138,9 +219,13 @@ export default function ACSubmissionForm() {
               value={formData.customerName}
               onChange={(e) => handleChange('customerName', e.target.value)}
               className={errors.customerName ? 'border-destructive' : ''}
+              disabled={isSubmitting}
             />
             {errors.customerName && (
-              <p className="text-sm text-destructive">{errors.customerName}</p>
+              <p className="text-sm text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {errors.customerName}
+              </p>
             )}
           </div>
 
@@ -150,12 +235,18 @@ export default function ACSubmissionForm() {
               <Input
                 id="phone"
                 type="tel"
-                placeholder="(555) 123-4567"
+                placeholder="9876543210"
                 value={formData.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 className={errors.phone ? 'border-destructive' : ''}
+                disabled={isSubmitting}
               />
-              {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+              {errors.phone && (
+                <p className="text-sm text-destructive flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.phone}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -167,8 +258,14 @@ export default function ACSubmissionForm() {
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 className={errors.email ? 'border-destructive' : ''}
+                disabled={isSubmitting}
               />
-              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-sm text-destructive flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.email}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -176,7 +273,16 @@ export default function ACSubmissionForm() {
 
       {error && (
         <div className="p-4 bg-destructive/10 border border-destructive rounded-md">
-          <p className="text-sm text-destructive">{error}</p>
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-destructive mb-1">Submission Error</p>
+              <p className="text-sm text-destructive/90">{error}</p>
+              <p className="text-xs text-destructive/70 mt-2">
+                If the problem persists, please contact support or try again later.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

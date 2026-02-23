@@ -23,6 +23,12 @@ const submitRoute = createRoute({
   component: SubmitAC,
 });
 
+interface SuccessRouteState {
+  customerName?: string;
+  phone?: string;
+  email?: string;
+}
+
 const successRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/success',
@@ -61,6 +67,11 @@ const router = createRouter({ routeTree });
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
+  }
+  interface HistoryState {
+    customerName?: string;
+    phone?: string;
+    email?: string;
   }
 }
 

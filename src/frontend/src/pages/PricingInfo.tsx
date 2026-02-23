@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import PricingFactorCard from '@/components/PricingFactorCard';
+import PricingCalculator from '@/components/PricingCalculator';
 import { Calendar, Award, Zap, TrendingUp, Wrench, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from '@tanstack/react-router';
@@ -58,6 +59,10 @@ export default function PricingInfo() {
             <p className="text-lg text-muted-foreground">
               We evaluate multiple factors to provide you with the most competitive offer for your used air conditioner.
             </p>
+          </div>
+
+          <div className="mb-12">
+            <PricingCalculator />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">

@@ -1,38 +1,88 @@
 {
   "kind": "build_request",
-  "title": "Add Admin Dashboard link to mobile navigation menu",
+  "title": "Fix Admin Dashboard authentication flow - not triggering login dialog",
   "projectName": "AC Buy",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-19",
-      "text": "Add the Admin Dashboard navigation link to the mobile menu in the Layout component so it appears when users open the hamburger menu on mobile devices",
+      "id": "REQ-38",
+      "text": "Debug the Admin Dashboard button click handler in frontend/src/components/Layout.tsx to identify why the Internet Identity login dialog is not appearing when clicking the Admin Dashboard navigation button",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-last"
         ],
         "quotes": [
-          "You can see iam not getting Admin dashboard option"
+          "No not working"
         ]
       },
       "acceptanceCriteria": [
-        "Admin Dashboard link appears in the mobile menu alongside Home, Submit AC, Pricing Info, and Contact links",
-        "Mobile menu displays all navigation options including Admin Dashboard when hamburger icon is clicked",
-        "Admin Dashboard link in mobile menu navigates to /admin route when clicked",
-        "Mobile menu closes after Admin Dashboard link is clicked"
+        "Console logs show the exact execution flow when Admin Dashboard button is clicked",
+        "Any errors preventing the login dialog from appearing are identified and logged",
+        "The authentication state (isAuthenticated, isInitializing) values are verified at click time"
+      ]
+    },
+    {
+      "id": "REQ-39",
+      "text": "Fix the Internet Identity login trigger in the Admin Dashboard navigation flow to ensure the login dialog appears immediately when an unauthenticated user clicks the Admin Dashboard button",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "No not working"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking Admin Dashboard button when not authenticated displays the Internet Identity login dialog",
+        "The login dialog appears without requiring page refresh or navigation",
+        "After successful authentication, user is automatically navigated to /admin route"
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "text": "Add comprehensive error handling in the Admin Dashboard click handler to catch any errors during the authentication flow and display user-friendly error messages when the login process fails",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "No not working"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All errors during authentication are caught and logged to console with full details",
+        "User sees a toast or alert message if login fails with actionable guidance",
+        "Network errors, timeout errors, and user cancellation are handled gracefully"
+      ]
+    },
+    {
+      "id": "REQ-41",
+      "text": "Verify that the useInternetIdentity hook's login() function is properly resolving and handling the authentication callback, ensuring it completes the authentication process successfully",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The login() function completes without throwing unhandled errors",
+        "Authentication state updates correctly after successful login",
+        "The authenticated principal is properly stored and accessible after login"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the desktop navigation implementation - Admin Dashboard link already works there",
-    "Maintain the existing mobile menu structure and styling with the earth-tone color palette",
-    "Keep the conditional rendering logic that shows/hides Admin link based on authentication state"
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts structure",
+    "Preserve existing Internet Identity authentication integration",
+    "Maintain compatibility with existing authentication checks in Admin.tsx"
   ],
   "nonGoals": [
-    "Changing the authentication flow or login system",
-    "Modifying the admin dashboard page functionality",
-    "Altering the desktop navigation menu structure"
+    "Implementing alternative authentication methods",
+    "Changing the Internet Identity provider configuration",
+    "Modifying backend authentication logic"
   ],
   "imageRequirements": {
     "required": [],

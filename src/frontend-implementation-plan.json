@@ -1,22 +1,69 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Admin Dashboard link to mobile navigation menu",
+  "title": "Fix Admin Dashboard Authentication Flow",
   "requirements": [
     {
-      "id": "REQ-19",
-      "summary": "Add Admin Dashboard link to mobile menu so authenticated users can access admin functionality from mobile devices",
+      "id": "REQ-38",
+      "summary": "Debug Admin Dashboard button click handler to identify why Internet Identity login dialog is not appearing",
       "acceptanceCriteria": [
-        "Admin Dashboard link appears in the mobile menu alongside Home, Submit AC, Pricing Info, and Contact links",
-        "Mobile menu displays all navigation options including Admin Dashboard when hamburger icon is clicked",
-        "Admin Dashboard link in mobile menu navigates to /admin route when clicked",
-        "Mobile menu closes after Admin Dashboard link is clicked"
+        "Console logs show the exact execution flow when Admin Dashboard button is clicked",
+        "Any errors preventing the login dialog from appearing are identified and logged",
+        "The authentication state (isAuthenticated, isInitializing) values are verified at click time"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add Admin Dashboard navigation link to the mobile menu section within the Sheet component. Include the link with conditional rendering based on authentication state (isAuthenticated from useInternetIdentity hook), matching the existing desktop navigation pattern. Ensure the link uses the same earth-tone styling as other mobile menu items and closes the mobile menu when clicked using setMobileMenuOpen(false). Place the Admin link in the mobile menu list after the Contact link to match the desktop navigation order."
+          "description": "Add comprehensive debug logging to the Admin Dashboard button click handler (handleAdminClick function). Log authentication state values (isAuthenticated, isInitializing, identity) at the start of the function. Add try-catch blocks with detailed error logging around the login() call. Log before and after each critical step: state check, login invocation, navigation attempt. Verify the login() promise resolution is properly awaited and any errors are caught and logged with full stack traces."
+        }
+      ]
+    },
+    {
+      "id": "REQ-39",
+      "summary": "Fix Internet Identity login trigger to ensure login dialog appears immediately when clicking Admin Dashboard button",
+      "acceptanceCriteria": [
+        "Clicking Admin Dashboard button when not authenticated displays the Internet Identity login dialog",
+        "The login dialog appears without requiring page refresh or navigation",
+        "After successful authentication, user is automatically navigated to /admin route"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Fix the handleAdminClick function to ensure the Internet Identity login dialog is triggered correctly. Verify the login() function from useInternetIdentity is being called with proper await syntax. Ensure the authentication state check (isAuthenticated) is evaluated correctly before calling login(). After successful login(), ensure navigation to '/admin' happens only after authentication completes. Remove any conditional logic that might prevent the login dialog from appearing. Ensure the loading state is set correctly to provide user feedback during the authentication process."
+        }
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "summary": "Add comprehensive error handling in Admin Dashboard click handler with user-friendly error messages",
+      "acceptanceCriteria": [
+        "All errors during authentication are caught and logged to console with full details",
+        "User sees a toast or alert message if login fails with actionable guidance",
+        "Network errors, timeout errors, and user cancellation are handled gracefully"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Wrap the entire handleAdminClick authentication flow in a try-catch block that catches and logs all errors with full stack traces. Add specific error handling for different error types: network errors (show 'Network connection failed' message), timeout errors (show 'Login timed out' message), user cancellation (show 'Login cancelled' message or handle silently), and generic errors (show 'Authentication failed' message). Display user-friendly error messages using browser alert or console.error with actionable guidance. Ensure the loading state is reset to false in a finally block so the UI recovers from errors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-41",
+      "summary": "Verify useInternetIdentity hook's login() function properly resolves and completes authentication",
+      "acceptanceCriteria": [
+        "The login() function completes without throwing unhandled errors",
+        "Authentication state updates correctly after successful login",
+        "The authenticated principal is properly stored and accessible after login"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "After calling login() in handleAdminClick, add verification logging to confirm the authentication state has updated correctly. Log the identity and isAuthenticated values immediately after the login() promise resolves. Add a small delay or polling mechanism (checking isAuthenticated every 100ms for up to 2 seconds) to ensure the authentication state has propagated before attempting navigation to /admin. Log the authenticated principal value to verify it was properly stored. If authentication state does not update within the timeout, log a warning and do not navigate."
         }
       ]
     }

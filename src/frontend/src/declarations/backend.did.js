@@ -9,7 +9,13 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const Time = IDL.Int;
-export const Condition = IDL.Record({ 'description' : IDL.Text });
+export const Condition = IDL.Variant({
+  'new' : IDL.Null,
+  'good' : IDL.Null,
+  'poor' : IDL.Null,
+  'average' : IDL.Null,
+  'excellent' : IDL.Null,
+});
 export const Submission = IDL.Record({
   'age' : IDL.Nat,
   'customerName' : IDL.Text,
@@ -20,6 +26,10 @@ export const Submission = IDL.Record({
   'phone' : IDL.Text,
   'condition' : Condition,
 });
+export const SubmissionResult = IDL.Variant({
+  'error' : IDL.Text,
+  'success' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
   'getAllCustomerContacts' : IDL.Func(
@@ -29,9 +39,9 @@ export const idlService = IDL.Service({
     ),
   'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], []),
   'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], []),
-  'submitAirConditioner' : IDL.Func(
+  'submitAC' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Nat, Condition, IDL.Text, IDL.Text, IDL.Text],
-      [IDL.Bool],
+      [SubmissionResult],
       [],
     ),
 });
@@ -40,7 +50,13 @@ export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
   const Time = IDL.Int;
-  const Condition = IDL.Record({ 'description' : IDL.Text });
+  const Condition = IDL.Variant({
+    'new' : IDL.Null,
+    'good' : IDL.Null,
+    'poor' : IDL.Null,
+    'average' : IDL.Null,
+    'excellent' : IDL.Null,
+  });
   const Submission = IDL.Record({
     'age' : IDL.Nat,
     'customerName' : IDL.Text,
@@ -51,6 +67,10 @@ export const idlFactory = ({ IDL }) => {
     'phone' : IDL.Text,
     'condition' : Condition,
   });
+  const SubmissionResult = IDL.Variant({
+    'error' : IDL.Text,
+    'success' : IDL.Text,
+  });
   
   return IDL.Service({
     'getAllCustomerContacts' : IDL.Func(
@@ -60,9 +80,9 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], []),
     'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], []),
-    'submitAirConditioner' : IDL.Func(
+    'submitAC' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Nat, Condition, IDL.Text, IDL.Text, IDL.Text],
-        [IDL.Bool],
+        [SubmissionResult],
         [],
       ),
   });

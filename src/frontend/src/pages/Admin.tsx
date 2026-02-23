@@ -3,16 +3,53 @@ import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Mail, Phone, Calendar, Package, Shield, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Mail, Phone, Calendar, Package, Shield, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Condition } from '@/backend';
 
 export default function Admin() {
   const { identity, login, loginStatus, isLoggingIn } = useInternetIdentity();
-  const { data: submissions, isLoading, error } = useGetAllSubmissions();
+  const { data: submissions, isLoading, error, refetch, isRefetching } = useGetAllSubmissions();
 
   // Check if user is authenticated
   const isAuthenticated = !!identity && loginStatus === 'success';
+
+  // Helper function to format condition enum to readable text
+  const formatCondition = (condition: Condition): string => {
+    switch (condition) {
+      case Condition.new_:
+        return 'Brand New';
+      case Condition.excellent:
+        return 'Excellent';
+      case Condition.good:
+        return 'Good';
+      case Condition.average:
+        return 'Average';
+      case Condition.poor:
+        return 'Poor';
+      default:
+        return String(condition);
+    }
+  };
+
+  // Helper function to get badge variant based on condition
+  const getConditionVariant = (condition: Condition): 'default' | 'secondary' | 'outline' | 'destructive' => {
+    switch (condition) {
+      case Condition.new_:
+      case Condition.excellent:
+        return 'default';
+      case Condition.good:
+        return 'secondary';
+      case Condition.average:
+        return 'outline';
+      case Condition.poor:
+        return 'destructive';
+      default:
+        return 'outline';
+    }
+  };
 
   // Show login prompt if not authenticated
   if (!isAuthenticated) {
@@ -75,13 +112,67 @@ export default function Admin() {
   }
 
   if (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to load customer submissions';
+    
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Alert variant="destructive">
-          <AlertDescription>
-            Failed to load customer submissions. Please try again later.
-          </AlertDescription>
-        </Alert>
+        <div className="max-w-2xl mx-auto space-y-4">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error Loading Submissions</AlertTitle>
+            <AlertDescription className="mt-2 space-y-2">
+              <p>{errorMessage}</p>
+              <div className="mt-4 space-y-2 text-sm">
+                <p className="font-medium">Troubleshooting steps:</p>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                  <li>Check that you are logged in with Internet Identity</li>
+                  <li>Verify your internet connection is stable</li>
+                  <li>Try refreshing the page or clicking the retry button below</li>
+                  <li>If the problem persists, try logging out and logging back in</li>
+                </ul>
+              </div>
+            </AlertDescription>
+          </Alert>
+          
+          <div className="flex gap-3">
+            <Button
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              variant="default"
+              className="flex-1"
+            >
+              {isRefetching ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Retry Loading Submissions
+                </>
+              )}
+            </Button>
+            
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
+            >
+              Refresh Page
+            </Button>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium">Technical Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground font-mono break-all">
+                {error instanceof Error ? error.stack || error.message : String(error)}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -100,13 +191,34 @@ export default function Admin() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-4xl font-bold text-foreground mb-2">
-            {sortedSubmissions.length} Customer Submission{sortedSubmissions.length !== 1 ? 's' : ''}
-          </h1>
-          <p className="text-muted-foreground">
-            View and manage all AC purchase inquiries from customers
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground mb-2">
+              {sortedSubmissions.length} Customer Submission{sortedSubmissions.length !== 1 ? 's' : ''}
+            </h1>
+            <p className="text-muted-foreground">
+              View and manage all AC purchase inquiries from customers
+            </p>
+          </div>
+          
+          <Button
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            variant="outline"
+            size="sm"
+          >
+            {isRefetching ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Refreshing...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh
+              </>
+            )}
+          </Button>
         </div>
 
         {sortedSubmissions.length === 0 ? (
@@ -136,7 +248,7 @@ export default function Admin() {
                       <TableHead className="min-w-[100px]">Brand</TableHead>
                       <TableHead className="min-w-[120px]">Model</TableHead>
                       <TableHead className="min-w-[80px]">Age</TableHead>
-                      <TableHead className="min-w-[200px]">Condition</TableHead>
+                      <TableHead className="min-w-[120px]">Condition</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -170,10 +282,10 @@ export default function Admin() {
                         <TableCell>{submission.brand}</TableCell>
                         <TableCell>{submission.model}</TableCell>
                         <TableCell>{Number(submission.age)} years</TableCell>
-                        <TableCell className="max-w-xs">
-                          <p className="text-sm text-muted-foreground line-clamp-2">
-                            {submission.condition.description}
-                          </p>
+                        <TableCell>
+                          <Badge variant={getConditionVariant(submission.condition)}>
+                            {formatCondition(submission.condition)}
+                          </Badge>
                         </TableCell>
                       </TableRow>
                     ))}

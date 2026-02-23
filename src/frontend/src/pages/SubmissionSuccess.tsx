@@ -1,10 +1,22 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useLocation } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, Home, Send } from 'lucide-react';
+import { CheckCircle2, Home, Send, User, Phone, Mail, Headphones } from 'lucide-react';
 
 export default function SubmissionSuccess() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as { customerName?: string; phone?: string; email?: string } | undefined;
+
+  const customerName = state?.customerName;
+  const phone = state?.phone;
+  const email = state?.email;
+
+  const ownerPhoneNumbers = [
+    '889700937',
+    '6304843930',
+    '+917095510215'
+  ];
 
   return (
     <div className="py-12 md:py-16 min-h-[calc(100vh-4rem)]">
@@ -21,6 +33,45 @@ export default function SubmissionSuccess() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {customerName && (
+                <div className="bg-accent/10 border border-accent/30 rounded-lg p-5">
+                  <h3 className="font-semibold text-lg mb-3">Your Contact Details</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Name</p>
+                        <p className="font-medium">{customerName}</p>
+                      </div>
+                    </div>
+                    {phone && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Phone className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Phone</p>
+                          <p className="font-medium">{phone}</p>
+                        </div>
+                      </div>
+                    )}
+                    {email && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Mail className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Email</p>
+                          <p className="font-medium break-all">{email}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-muted/50 rounded-lg p-6 space-y-3">
                 <h3 className="font-semibold text-lg">What happens next?</h3>
                 <ul className="space-y-2 text-muted-foreground">
@@ -39,12 +90,40 @@ export default function SubmissionSuccess() {
                 </ul>
               </div>
 
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-                <p className="text-sm text-center">
-                  <strong>Need immediate assistance?</strong>
-                  <br />
-                  Call us at (555) 123-4567 or email info@acbuy.com
-                </p>
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-5">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Headphones className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-base mb-1">Contact Us</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Need immediate assistance? Reach out to us directly:
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2 ml-13">
+                  {ownerPhoneNumbers.map((phoneNumber) => (
+                    <div key={phoneNumber} className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-primary flex-shrink-0" />
+                      <a 
+                        href={`tel:${phoneNumber}`}
+                        className="text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        {phoneNumber}
+                      </a>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 pt-1">
+                    <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                    <a 
+                      href="mailto:info@acbuy.com"
+                      className="text-sm font-medium hover:text-primary transition-colors"
+                    >
+                      info@acbuy.com
+                    </a>
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 pt-4">

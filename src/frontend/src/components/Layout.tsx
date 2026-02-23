@@ -1,13 +1,15 @@
 import { Link, Outlet, useNavigate } from '@tanstack/react-router';
-import { Menu, X, Wind, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, X, Wind, LogOut, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { toast } from 'sonner';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pendingAdminNavigation, setPendingAdminNavigation] = useState(false);
   const navigate = useNavigate();
-  const { identity, clear, loginStatus } = useInternetIdentity();
+  const { identity, clear, loginStatus, login, isLoggingIn, isInitializing, loginError } = useInternetIdentity();
 
   // Check if user is authenticated
   const isAuthenticated = !!identity && loginStatus === 'success';
@@ -17,7 +19,6 @@ export default function Layout() {
     { name: 'Submit AC', path: '/submit' },
     { name: 'Pricing Info', path: '/pricing' },
     { name: 'Contact', path: '/contact' },
-    { name: 'Admin Dashboard', path: '/admin' },
   ];
 
   const phoneNumbers = [
@@ -26,11 +27,111 @@ export default function Layout() {
     '+917095510215'
   ];
 
+  // Effect to handle navigation after successful authentication
+  useEffect(() => {
+    console.log('[Layout Effect] Authentication state changed:', {
+      isAuthenticated,
+      loginStatus,
+      hasIdentity: !!identity,
+      pendingAdminNavigation,
+      identityPrincipal: identity?.getPrincipal().toString(),
+      timestamp: new Date().toISOString()
+    });
+
+    if (pendingAdminNavigation && isAuthenticated) {
+      console.log('[Layout Effect] Authentication successful, navigating to admin dashboard...');
+      setPendingAdminNavigation(false);
+      setMobileMenuOpen(false);
+      navigate({ to: '/admin' });
+      toast.success('Successfully authenticated!');
+    }
+
+    if (pendingAdminNavigation && loginStatus === 'loginError') {
+      console.error('[Layout Effect] Login failed:', loginError);
+      setPendingAdminNavigation(false);
+      
+      const errorMessage = loginError?.message || 'Authentication failed';
+      
+      // Provide user-friendly error messages based on error type
+      if (errorMessage.includes('User cancelled') || errorMessage.includes('cancelled')) {
+        toast.info('Login was cancelled');
+      } else if (errorMessage.includes('network') || errorMessage.includes('Network')) {
+        toast.error('Network connection failed. Please check your internet connection and try again.');
+      } else if (errorMessage.includes('timeout') || errorMessage.includes('Timeout')) {
+        toast.error('Login timed out. Please try again.');
+      } else {
+        toast.error(`Authentication failed: ${errorMessage}`);
+      }
+    }
+  }, [isAuthenticated, loginStatus, pendingAdminNavigation, navigate, identity, loginError]);
+
   const handleLogout = () => {
+    console.log('[Logout] Logging out user');
     clear();
     navigate({ to: '/' });
     setMobileMenuOpen(false);
   };
+
+  const handleAdminClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    console.log('[Admin Click] ========== ADMIN DASHBOARD BUTTON CLICKED ==========');
+    console.log('[Admin Click] Current authentication state:', {
+      isAuthenticated,
+      loginStatus,
+      hasIdentity: !!identity,
+      isLoggingIn,
+      isInitializing,
+      identityPrincipal: identity?.getPrincipal().toString(),
+      timestamp: new Date().toISOString()
+    });
+
+    // If already authenticated, navigate directly
+    if (isAuthenticated) {
+      console.log('[Admin Click] User already authenticated, navigating directly to admin dashboard');
+      navigate({ to: '/admin' });
+      setMobileMenuOpen(false);
+      return;
+    }
+
+    // If currently initializing, wait
+    if (isInitializing) {
+      console.log('[Admin Click] Auth client still initializing, please wait...');
+      toast.info('Initializing authentication, please wait...');
+      return;
+    }
+
+    // If already logging in, don't trigger again
+    if (isLoggingIn) {
+      console.log('[Admin Click] Login already in progress, ignoring duplicate click');
+      return;
+    }
+
+    try {
+      console.log('[Admin Click] User not authenticated, triggering Internet Identity login dialog...');
+      setPendingAdminNavigation(true);
+      
+      // Call login() - this will trigger the Internet Identity dialog
+      // The login() function is void and handles the flow via callbacks
+      login();
+      
+      console.log('[Admin Click] Login function called, Internet Identity dialog should appear now');
+      console.log('[Admin Click] Waiting for user to complete authentication in the dialog...');
+      
+    } catch (error) {
+      console.error('[Admin Click] Unexpected error during login trigger:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : String(error),
+        errorStack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString()
+      });
+      
+      setPendingAdminNavigation(false);
+      toast.error('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const isAdminButtonLoading = isLoggingIn || (pendingAdminNavigation && loginStatus === 'logging-in');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -59,6 +160,14 @@ export default function Layout() {
                     {item.name}
                   </Link>
                 ))}
+                <button
+                  onClick={handleAdminClick}
+                  disabled={isAdminButtonLoading || isInitializing}
+                  className="px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isAdminButtonLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Admin Dashboard
+                </button>
               </div>
             </div>
 
@@ -112,6 +221,14 @@ export default function Layout() {
                     {item.name}
                   </Link>
                 ))}
+                <button
+                  onClick={handleAdminClick}
+                  disabled={isAdminButtonLoading || isInitializing}
+                  className="px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isAdminButtonLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Admin Dashboard
+                </button>
                 {isAuthenticated && (
                   <Button
                     variant="ghost"
@@ -157,7 +274,7 @@ export default function Layout() {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                {navigation.slice(0, 4).map((item) => (
+                {navigation.map((item) => (
                   <li key={item.name}>
                     <Link
                       to={item.path}

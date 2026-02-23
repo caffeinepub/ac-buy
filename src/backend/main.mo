@@ -5,9 +5,15 @@ import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
+
+
 actor {
   type Condition = {
-    description : Text;
+    #new;
+    #excellent;
+    #good;
+    #average;
+    #poor;
   };
 
   type Submission = {
@@ -23,7 +29,12 @@ actor {
 
   let submissions = Map.empty<Text, Submission>();
 
-  public shared ({ caller }) func submitAirConditioner(
+  type SubmissionResult = {
+    #success : Text;
+    #error : Text;
+  };
+
+  public shared ({ caller }) func submitAC(
     brand : Text,
     model : Text,
     age : Nat,
@@ -31,9 +42,28 @@ actor {
     customerName : Text,
     phone : Text,
     email : Text,
-  ) : async Bool {
-    let id = brand.concat(model).concat(Time.now().toText());
-    let submission : Submission = {
+  ) : async SubmissionResult {
+    // Validate inputs
+    if (brand == "" or model == "") {
+      return #error("Brand and model must not be empty");
+    };
+
+    if (age > 100) {
+      return #error("Age appears invalid. Please check your input");
+    };
+
+    if (customerName == "" or phone == "") {
+      return #error("Must provide all required customer details (name & phone number)");
+    };
+
+    // Check for duplicates based on brand, model, and customer
+    let submissionKey = brand.concat(model).concat(customerName);
+    if (submissions.get(submissionKey) != null) {
+      return #error("AC has already been submitted with these details. Please check your inputs");
+    };
+
+    // Create and store new submission
+    let newSubmission : Submission = {
       brand;
       model;
       age;
@@ -43,8 +73,9 @@ actor {
       email;
       timestamp = Time.now();
     };
-    submissions.add(id, submission);
-    true;
+
+    submissions.add(submissionKey, newSubmission);
+    #success("Validated submission received, successfully stored entry.");
   };
 
   public shared ({ caller }) func getSubmission(id : Text) : async ?Submission {
@@ -58,6 +89,7 @@ actor {
   };
 
   public shared ({ caller }) func getAllCustomerContacts() : async [(Text, Text, Text, Text)] {
+    assertIsAuthenticated(caller);
     submissions.values().map(
       func(submission) {
         (submission.customerName, submission.phone, submission.email, submission.brand.concat(" ").concat(submission.model));
@@ -67,7 +99,9 @@ actor {
 
   func assertIsAuthenticated(caller : Principal) {
     if (caller.isAnonymous()) {
-      Runtime.trap("You must be authenticated through Internet Identity to access this route. Please log in and try again.");
+      Runtime.trap(
+        "You must be authenticated through Internet Identity to access this route. Please log in and try again.",
+      );
     };
   };
 };

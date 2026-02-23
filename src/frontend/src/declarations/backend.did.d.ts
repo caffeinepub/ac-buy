@@ -10,7 +10,11 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface Condition { 'description' : string }
+export type Condition = { 'new' : null } |
+  { 'good' : null } |
+  { 'poor' : null } |
+  { 'average' : null } |
+  { 'excellent' : null };
 export interface Submission {
   'age' : bigint,
   'customerName' : string,
@@ -21,6 +25,8 @@ export interface Submission {
   'phone' : string,
   'condition' : Condition,
 }
+export type SubmissionResult = { 'error' : string } |
+  { 'success' : string };
 export type Time = bigint;
 export interface _SERVICE {
   'getAllCustomerContacts' : ActorMethod<
@@ -29,9 +35,9 @@ export interface _SERVICE {
   >,
   'getAllSubmissions' : ActorMethod<[], Array<Submission>>,
   'getSubmission' : ActorMethod<[string], [] | [Submission]>,
-  'submitAirConditioner' : ActorMethod<
+  'submitAC' : ActorMethod<
     [string, string, bigint, Condition, string, string, string],
-    boolean
+    SubmissionResult
   >,
 }
 export declare const idlService: IDL.ServiceClass;
