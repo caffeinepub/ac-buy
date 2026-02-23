@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Deploy the AC Buy application to the Internet Computer mainnet for public access.
+**Goal:** Add Admin Dashboard link to the mobile navigation menu so authenticated users can access the admin panel from mobile devices.
 
 **Planned changes:**
-- Deploy frontend and backend canisters to Internet Computer mainnet
-- Generate permanent public canister URL for customer sharing
-- Ensure Internet Identity authentication works on mainnet
-- Verify all existing features (customer form, pricing, contact page, admin dashboard) function correctly on mainnet
+- Add Admin Dashboard navigation link to the mobile hamburger menu in the Layout component
+- Ensure the Admin Dashboard link appears alongside existing menu items (Home, Submit AC, Pricing Info, Contact)
+- Maintain conditional rendering based on authentication state
 
-**User-visible outcome:** The application is publicly accessible via a permanent https://[canister-id].icp0.io URL that can be shared with customers, with all features working including customer submissions and admin dashboard access.
+**User-visible outcome:** When users open the mobile menu, they will see the Admin Dashboard option and can navigate to the admin panel by clicking it.

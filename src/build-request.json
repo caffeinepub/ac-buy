@@ -1,41 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Deploy application to Internet Computer mainnet",
+  "title": "Add Admin Dashboard link to mobile navigation menu",
   "projectName": "AC Buy",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-18",
-      "text": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL that can be shared with customers",
-      "target": "both",
+      "id": "REQ-19",
+      "text": "Add the Admin Dashboard navigation link to the mobile menu in the Layout component so it appears when users open the hamburger menu on mobile devices",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-latest"
         ],
         "quotes": [
-          "Ok go live",
-          "Please give me my website link so that I can share to my customers"
+          "You can see iam not getting Admin dashboard option"
         ]
       },
       "acceptanceCriteria": [
-        "Application is deployed to Internet Computer mainnet (not local replica)",
-        "A permanent canister URL is generated in the format https://[canister-id].icp0.io or https://[canister-id].raw.icp0.io",
-        "The URL is publicly accessible and can be shared with customers",
-        "All existing features function correctly on mainnet including customer submission form, pricing information, contact page, and authenticated admin dashboard",
-        "Internet Identity authentication works on mainnet for admin dashboard access",
-        "Customer submissions are persisted on mainnet storage"
+        "Admin Dashboard link appears in the mobile menu alongside Home, Submit AC, Pricing Info, and Contact links",
+        "Mobile menu displays all navigation options including Admin Dashboard when hamburger icon is clicked",
+        "Admin Dashboard link in mobile menu navigates to /admin route when clicked",
+        "Mobile menu closes after Admin Dashboard link is clicked"
       ]
     }
   ],
   "constraints": [
-    "Must deploy to Internet Computer mainnet, not local development environment",
-    "Must preserve all existing functionality including Internet Identity authentication",
-    "Must not modify any application code - this is purely a deployment request"
+    "Do not modify the desktop navigation implementation - Admin Dashboard link already works there",
+    "Maintain the existing mobile menu structure and styling with the earth-tone color palette",
+    "Keep the conditional rendering logic that shows/hides Admin link based on authentication state"
   ],
   "nonGoals": [
-    "Making any code changes or adding new features",
-    "Modifying the application logic or user interface",
-    "Changing authentication or data storage mechanisms"
+    "Changing the authentication flow or login system",
+    "Modifying the admin dashboard page functionality",
+    "Altering the desktop navigation menu structure"
   ],
   "imageRequirements": {
     "required": [],

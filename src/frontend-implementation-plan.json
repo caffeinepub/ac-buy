@@ -1,34 +1,22 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Deploy AC Buy Application to Internet Computer Mainnet",
+  "title": "Add Admin Dashboard link to mobile navigation menu",
   "requirements": [
     {
-      "id": "REQ-18",
-      "summary": "Verify frontend configuration is mainnet-ready and ensure Internet Identity authentication works with mainnet deployment",
+      "id": "REQ-19",
+      "summary": "Add Admin Dashboard link to mobile menu so authenticated users can access admin functionality from mobile devices",
       "acceptanceCriteria": [
-        "Application is deployed to Internet Computer mainnet (not local replica)",
-        "A permanent canister URL is generated in the format https://[canister-id].icp0.io or https://[canister-id].raw.icp0.io",
-        "The URL is publicly accessible and can be shared with customers",
-        "All existing features function correctly on mainnet including customer submission form, pricing information, contact page, and authenticated admin dashboard",
-        "Internet Identity authentication works on mainnet for admin dashboard access",
-        "Customer submissions are persisted on mainnet storage"
+        "Admin Dashboard link appears in the mobile menu alongside Home, Submit AC, Pricing Info, and Contact links",
+        "Mobile menu displays all navigation options including Admin Dashboard when hamburger icon is clicked",
+        "Admin Dashboard link in mobile menu navigates to /admin route when clicked",
+        "Mobile menu closes after Admin Dashboard link is clicked"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Verify that Internet Identity authentication configuration supports mainnet deployment by ensuring the AuthClient is initialized without local-only settings and can handle mainnet Internet Identity service URLs"
-        },
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Verify that the backend actor initialization correctly uses mainnet canister IDs from environment configuration and supports mainnet host URLs for agent creation"
-        },
-        {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Verify that the HTML entry point contains no hardcoded local development URLs and properly references bundled assets for mainnet deployment"
+          "description": "Add Admin Dashboard navigation link to the mobile menu section within the Sheet component. Include the link with conditional rendering based on authentication state (isAuthenticated from useInternetIdentity hook), matching the existing desktop navigation pattern. Ensure the link uses the same earth-tone styling as other mobile menu items and closes the mobile menu when clicked using setMobileMenuOpen(false). Place the Admin link in the mobile menu list after the Contact link to match the desktop navigation order."
         }
       ]
     }

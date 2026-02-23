@@ -1,11 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 15,
   "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
   "architectural_notes": [
     "Admin dashboard currently has no authentication - publicly accessible by anyone who visits /admin route"
   ],
-  "known_issues": [],
+  "known_issues": [
+    "Admin dashboard navigation link not appearing in header menu for user"
+  ],
   "isFixRequest": true,
   "existing_features": [
     {
@@ -117,6 +119,14 @@
       "title": "Add a logout button in the header or admin dashboard that allows the authenticated business owner to sign out and clear their session",
       "reqIds": [
         "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-admin-dashboard-navigation-link-to-the-mobile-menu-in-the-layout-component-so-it-appears-when-users-open-the-hamburger-menu-on-mobile-devices",
+      "title": "Add the Admin Dashboard navigation link to the mobile menu in the Layout component so it appears when users open the hamburger menu on mobile devices",
+      "reqIds": [
+        "REQ-19"
       ],
       "version": 1
     }

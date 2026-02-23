@@ -12,18 +12,13 @@ export default function Layout() {
   // Check if user is authenticated
   const isAuthenticated = !!identity && loginStatus === 'success';
 
-  const publicNavigation = [
+  const navigation = [
     { name: 'Home', path: '/' },
     { name: 'Submit AC', path: '/submit' },
     { name: 'Pricing Info', path: '/pricing' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Admin Dashboard', path: '/admin' },
   ];
-
-  const adminNavigation = { name: 'Admin', path: '/admin' };
-
-  const navigation = isAuthenticated
-    ? [...publicNavigation, adminNavigation]
-    : publicNavigation;
 
   const phoneNumbers = [
     '889700937',
@@ -162,7 +157,7 @@ export default function Layout() {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                {publicNavigation.map((item) => (
+                {navigation.slice(0, 4).map((item) => (
                   <li key={item.name}>
                     <Link
                       to={item.path}
