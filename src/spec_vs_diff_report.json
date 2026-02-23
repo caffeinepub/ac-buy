@@ -1,0 +1,14 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T21:03:45.651Z",
+  "summary": "The diff fully implements REQ-9 by updating the footer in Layout.tsx to display three phone numbers (889700937, 6304843930, +917095510215) with proper formatting and tel: links. All acceptance criteria are met.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/Layout.tsx",
+    "project_state.json"
+  ]
+}

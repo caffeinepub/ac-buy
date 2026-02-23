@@ -1,0 +1,40 @@
+{
+  "kind": "build_request",
+  "title": "Update contact phone numbers in footer",
+  "projectName": "AC Buy",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-9",
+      "text": "Update the footer contact phone number list in the Layout component to display the three phone numbers: 889700937, 6304843930, and +917095510215, replacing the existing phone number entry",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Contact 889700937\n6304843930\n+917095510215"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The footer displays all three phone numbers: 889700937, 6304843930, and +917095510215",
+        "The phone numbers are displayed in a clear, readable format in the contact information section",
+        "Each phone number is clickable with a tel: link for mobile convenience",
+        "The styling matches the existing footer contact information design"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify the frontend/src/components/Layout.tsx file structure or navigation elements",
+    "Maintain the existing footer design and layout"
+  ],
+  "nonGoals": [
+    "Changing the ContactInfo component on the Contact page",
+    "Adding email addresses or other contact methods",
+    "Modifying the header or navigation"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

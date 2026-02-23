@@ -1,0 +1,23 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-footer-contact-phone-number-list-in-the-layout-component-to-display-the-three-phone-numbers-889700937-6304843930-and-917095510215-replacing-the-existing-phone-number-entry",
+      "featureTitle": "Update the footer contact phone number list in the Layout component to display the three phone numbers: 889700937, 6304843930, and +917095510215, replacing the existing phone number entry",
+      "files": [
+        "frontend/src/components/Layout.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

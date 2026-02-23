@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-homepage-that-explains-the-business-purchases-used-air-conditioners-from-customers-at-competitive-prices",
+      "title": "Create a homepage that explains the business purchases used air conditioners from customers at competitive prices",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-form-where-customers-can-submit-details-about-their-used-air-conditioner-including-brand-model-age-condition-and-contact-information",
+      "title": "Implement a form where customers can submit details about their used air conditioner including brand, model, age, condition, and contact information",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-pricing-information-or-guidelines-showing-factors-that-influence-the-purchase-price-of-used-air-conditioners",
+      "title": "Display pricing information or guidelines showing factors that influence the purchase price of used air conditioners",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-contact-section-with-business-contact-information-and-operating-hours",
+      "title": "Implement a contact section with business contact information and operating hours",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-professional-visual-theme-with-warm-trustworthy-colors-earth-tones-greens-or-warm-neutrals-modern-sans-serif-typography-and-a-clean-layout-that-conveys-reliability-and-environmental-responsibility",
+      "title": "Design a professional visual theme with warm, trustworthy colors (earth tones, greens, or warm neutrals), modern sans-serif typography, and a clean layout that conveys reliability and environmental responsibility",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pricing-information-page-to-display-all-price-values-in-indian-rupees-instead-of-dollars-including-the-example-pricing-tiers-and-any-monetary-amounts-shown",
+      "title": "Update the pricing information page to display all price values in Indian Rupees (₹) instead of dollars ($), including the example pricing tiers and any monetary amounts shown",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-other-pages-that-display-currency-amounts-home-page-contact-page-success-page-to-show-indian-rupees-instead-of-dollars-for-consistency-across-the-entire-application",
+      "title": "Update any other pages that display currency amounts (home page, contact page, success page) to show Indian Rupees (₹) instead of dollars ($) for consistency across the entire application",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-footer-contact-phone-number-list-in-the-layout-component-to-display-the-three-phone-numbers-889700937-6304843930-and-917095510215-replacing-the-existing-phone-number-entry",
+      "title": "Update the footer contact phone number list in the Layout component to display the three phone numbers: 889700937, 6304843930, and +917095510215, replacing the existing phone number entry",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create website for purchasing used air conditioners from customers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Create a backend data model to store air conditioner submissions with fields for brand, model, age, condition, customer name, phone, email, and submission timestamp",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Change currency display from dollars to Indian Rupees (INR)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Update contact section with phone numbers: 889700937, 6304843930, +917095510215",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "AC Buy",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
