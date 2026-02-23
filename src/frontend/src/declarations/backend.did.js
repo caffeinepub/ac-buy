@@ -22,8 +22,13 @@ export const Submission = IDL.Record({
 });
 
 export const idlService = IDL.Service({
-  'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], ['query']),
-  'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], ['query']),
+  'getAllCustomerContacts' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text, IDL.Text, IDL.Text))],
+      [],
+    ),
+  'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], []),
+  'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], []),
   'submitAirConditioner' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Nat, Condition, IDL.Text, IDL.Text, IDL.Text],
       [IDL.Bool],
@@ -48,8 +53,13 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
-    'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], ['query']),
-    'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], ['query']),
+    'getAllCustomerContacts' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text, IDL.Text, IDL.Text))],
+        [],
+      ),
+    'getAllSubmissions' : IDL.Func([], [IDL.Vec(Submission)], []),
+    'getSubmission' : IDL.Func([IDL.Text], [IDL.Opt(Submission)], []),
     'submitAirConditioner' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Nat, Condition, IDL.Text, IDL.Text, IDL.Text],
         [IDL.Bool],

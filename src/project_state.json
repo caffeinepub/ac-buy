@@ -1,10 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 13,
   "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
-  "architectural_notes": [],
+  "architectural_notes": [
+    "Admin dashboard currently has no authentication - publicly accessible by anyone who visits /admin route"
+  ],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-homepage-that-explains-the-business-purchases-used-air-conditioners-from-customers-at-competitive-prices",
@@ -69,6 +71,54 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-dashboard-page-accessible-at-admin-route-that-displays-all-customer-ac-submissions-in-a-table-format-showing-brand-model-customer-name-phone-number-email-and-submission-date",
+      "title": "Create an admin dashboard page accessible at /admin route that displays all customer AC submissions in a table format showing brand, model, customer name, phone number, email, and submission date",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-navigation-link-to-the-admin-dashboard-in-the-header-navigation-menu-so-the-business-owner-can-easily-access-customer-submissions",
+      "title": "Add a navigation link to the admin dashboard in the header navigation menu so the business owner can easily access customer submissions",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-total-count-of-customer-submissions-at-the-top-of-the-admin-dashboard-page-so-the-business-owner-knows-how-many-customers-have-registered",
+      "title": "Display the total count of customer submissions at the top of the admin dashboard page so the business owner knows how many customers have registered",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-internet-identity-authentication-protection-for-the-admin-dashboard-route-admin-so-that-only-authenticated-users-can-access-customer-submission-data",
+      "title": "Implement Internet Identity authentication protection for the admin dashboard route (/admin) so that only authenticated users can access customer submission data",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-login-button-or-prompt-on-the-admin-dashboard-page-when-user-is-not-authenticated-using-the-existing-internet-identity-authentication-system",
+      "title": "Display a login button or prompt on the admin dashboard page when user is not authenticated, using the existing Internet Identity authentication system",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-logout-button-in-the-header-or-admin-dashboard-that-allows-the-authenticated-business-owner-to-sign-out-and-clear-their-session",
+      "title": "Add a logout button in the header or admin dashboard that allows the authenticated business owner to sign out and clear their session",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -96,6 +146,48 @@
       "id": "AR-6",
       "summary": "Update contact section with phone numbers: 889700937, 6304843930, +917095510215",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Implement customer submission notification system so business owner knows when customers register their AC details",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Create admin interface or system to view and manage customer AC submissions with contact details",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Create a backend function to retrieve all customer AC submissions with their contact details (name, phone, email) so the business owner can view who has registered",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add authentication/login system to protect admin dashboard so only business owner can access customer submissions with credentials",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add a backend authentication check to verify that only authenticated principals can retrieve customer submission data via getAllSubmissions and getSubmission functions",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL that can be shared with customers",
+      "reqIds": [
+        "REQ-18"
+      ],
       "status": "pending"
     }
   ],

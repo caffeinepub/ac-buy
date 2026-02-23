@@ -1,34 +1,32 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T21:03:45.653Z",
+  "generatedAt": "2026-02-23T21:39:35.094Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 1,
-    "implemented": 1,
+    "implemented": 0,
     "items": [
       {
-        "id": "REQ-9",
-        "summary": "Update the footer contact phone number list in the Layout component to display the three phone numbers: 889700937, 6304843930, and +917095510215, replacing the existing phone number entry",
-        "status": "implemented",
+        "id": "REQ-18",
+        "summary": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL that can be shared with customers",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/hooks/useInternetIdentity.ts",
+          "frontend/src/hooks/useActor.ts",
+          "frontend/index.html"
         ],
-        "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
-        ]
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/Layout.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

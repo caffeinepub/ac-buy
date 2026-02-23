@@ -1,6 +1,6 @@
 {
-  "frontend/src/App.tsx": "Main application component that sets up TanStack Router with routes for home, submit AC, success, pricing info, and contact pages, all wrapped in a Layout component.",
-  "frontend/src/components/Layout.tsx": "Layout wrapper component providing consistent header with navigation, mobile menu, and footer with business information including three clickable phone numbers (889700937, 6304843930, +917095510215) and caffeine.ai attribution across all pages.",
+  "frontend/src/App.tsx": "Main application component that sets up TanStack Router with routes for home, submit AC, success, pricing info, contact, and admin pages, all wrapped in a Layout component.",
+  "frontend/src/components/Layout.tsx": "Layout wrapper component with header navigation that conditionally shows the Admin link only to authenticated users, includes a logout button in the header when authenticated, and provides consistent footer with business information and caffeine.ai attribution across all pages.",
   "frontend/src/pages/Home.tsx": "Homepage featuring hero section with generated image and \"Top Rupees\" messaging, value proposition about purchasing used ACs, feature cards highlighting competitive pricing and eco-friendliness, how-it-works section, and call-to-action.",
   "frontend/src/pages/SubmitAC.tsx": "AC submission page with informational cards about the quote process and the main ACSubmissionForm component for collecting air conditioner details.",
   "frontend/src/components/ACSubmissionForm.tsx": "Reusable form component with validation for collecting AC details (brand, model, age, condition) and customer contact information (name, phone, email), integrating with the backend submission hook.",
@@ -10,7 +10,8 @@
   "frontend/src/components/PricingFactorCard.tsx": "Reusable card component displaying individual pricing factors with icon (including support for generated eco-icon image), title, and description.",
   "frontend/src/pages/Contact.tsx": "Contact page displaying business contact information, operating hours, multiple contact channels, and frequently asked questions about the AC purchase process.",
   "frontend/src/components/ContactInfo.tsx": "Reusable component displaying structured contact information including phone, email, address, and business hours with icons.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for fetching submission data from the backend (getAllSubmissions and getSubmission by ID).",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for fetching submission data from the backend (getAllSubmissions with window focus refetch enabled, and getSubmission by ID).",
   "frontend/src/index.css": "Global styles with OKLCH color system featuring warm earth tones (terracotta primary, sand secondary, olive accent) for both light and dark modes, avoiding blue and purple.",
-  "frontend/tailwind.config.js": "Tailwind configuration with Inter font family, warm color palette tokens, custom border radius, and soft shadow utilities for a professional, trustworthy design."
+  "frontend/tailwind.config.js": "Tailwind configuration with Inter font family, warm color palette tokens, custom border radius, and soft shadow utilities for a professional, trustworthy design.",
+  "frontend/src/pages/Admin.tsx": "Admin dashboard page that requires Internet Identity authentication to view customer AC submissions; displays a login prompt with authentication button when user is not logged in, and shows the full submissions table with customer details only after successful authentication."
 }

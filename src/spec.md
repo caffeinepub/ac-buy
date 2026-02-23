@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Update footer contact information to display three phone numbers.
+**Goal:** Deploy the AC Buy application to the Internet Computer mainnet for public access.
 
 **Planned changes:**
-- Replace the existing single phone number in the footer with three phone numbers: 889700937, 6304843930, and +917095510215
-- Ensure each phone number is clickable with tel: links for mobile convenience
-- Maintain existing footer styling and design
+- Deploy frontend and backend canisters to Internet Computer mainnet
+- Generate permanent public canister URL for customer sharing
+- Ensure Internet Identity authentication works on mainnet
+- Verify all existing features (customer form, pricing, contact page, admin dashboard) function correctly on mainnet
 
-**User-visible outcome:** Users will see three contact phone numbers in the footer, each clickable for easy dialing on mobile devices.
+**User-visible outcome:** The application is publicly accessible via a permanent https://[canister-id].icp0.io URL that can be shared with customers, with all features working including customer submissions and admin dashboard access.

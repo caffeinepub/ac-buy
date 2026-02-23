@@ -1,24 +1,41 @@
 import { Link, Outlet, useNavigate } from '@tanstack/react-router';
-import { Menu, X, Wind } from 'lucide-react';
+import { Menu, X, Wind, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { identity, clear, loginStatus } = useInternetIdentity();
 
-  const navigation = [
+  // Check if user is authenticated
+  const isAuthenticated = !!identity && loginStatus === 'success';
+
+  const publicNavigation = [
     { name: 'Home', path: '/' },
     { name: 'Submit AC', path: '/submit' },
     { name: 'Pricing Info', path: '/pricing' },
     { name: 'Contact', path: '/contact' },
   ];
 
+  const adminNavigation = { name: 'Admin', path: '/admin' };
+
+  const navigation = isAuthenticated
+    ? [...publicNavigation, adminNavigation]
+    : publicNavigation;
+
   const phoneNumbers = [
     '889700937',
     '6304843930',
     '+917095510215'
   ];
+
+  const handleLogout = () => {
+    clear();
+    navigate({ to: '/' });
+    setMobileMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,7 +67,18 @@ export default function Layout() {
               </div>
             </div>
 
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-2">
+              {isAuthenticated && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Log Out
+                </Button>
+              )}
               <Button onClick={() => navigate({ to: '/submit' })}>
                 Get a Quote
               </Button>
@@ -89,6 +117,16 @@ export default function Layout() {
                     {item.name}
                   </Link>
                 ))}
+                {isAuthenticated && (
+                  <Button
+                    variant="ghost"
+                    onClick={handleLogout}
+                    className="w-full justify-start gap-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Log Out
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     navigate({ to: '/submit' });
@@ -124,7 +162,7 @@ export default function Layout() {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                {navigation.map((item) => (
+                {publicNavigation.map((item) => (
                   <li key={item.name}>
                     <Link
                       to={item.path}

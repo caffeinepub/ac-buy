@@ -22,6 +22,7 @@ export interface Condition {
     description: string;
 }
 export interface backendInterface {
+    getAllCustomerContacts(): Promise<Array<[string, string, string, string]>>;
     getAllSubmissions(): Promise<Array<Submission>>;
     getSubmission(id: string): Promise<Submission | null>;
     submitAirConditioner(brand: string, model: string, age: bigint, condition: Condition, customerName: string, phone: string, email: string): Promise<boolean>;

@@ -104,6 +104,7 @@ export interface Condition {
     description: string;
 }
 export interface backendInterface {
+    getAllCustomerContacts(): Promise<Array<[string, string, string, string]>>;
     getAllSubmissions(): Promise<Array<Submission>>;
     getSubmission(id: string): Promise<Submission | null>;
     submitAirConditioner(brand: string, model: string, age: bigint, condition: Condition, customerName: string, phone: string, email: string): Promise<boolean>;
@@ -111,6 +112,20 @@ export interface backendInterface {
 import type { Submission as _Submission } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async getAllCustomerContacts(): Promise<Array<[string, string, string, string]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllCustomerContacts();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllCustomerContacts();
+            return result;
+        }
+    }
     async getAllSubmissions(): Promise<Array<Submission>> {
         if (this.processError) {
             try {

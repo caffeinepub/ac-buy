@@ -12,6 +12,7 @@ export function useGetAllSubmissions() {
       return actor.getAllSubmissions();
     },
     enabled: !!actor && !isFetching,
+    refetchOnWindowFocus: true,
   });
 }
 

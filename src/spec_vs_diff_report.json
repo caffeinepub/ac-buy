@@ -1,14 +1,21 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T21:03:45.651Z",
-  "summary": "The diff fully implements REQ-9 by updating the footer in Layout.tsx to display three phone numbers (889700937, 6304843930, +917095510215) with proper formatting and tel: links. All acceptance criteria are met.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-23T21:39:35.091Z",
+  "summary": "The diff only shows metadata updates to project_state.json tracking the deployment requirement (REQ-18), but contains no actual deployment implementation, configuration changes, or evidence that the application was deployed to Internet Computer mainnet.",
+  "missing_requirements": [
+    {
+      "id": "REQ-18",
+      "requirement": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL",
+      "reason": "No deployment configuration files modified (dfx.json, canister_ids.json), no deployment scripts added, no evidence of mainnet deployment commands executed, and no canister URLs or deployment artifacts present in the diff",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
   "hallucinated_features": [],
   "confidence": 0.95,
   "changed_files": [
-    "frontend-file-summaries.txt",
-    "frontend/src/components/Layout.tsx",
     "project_state.json"
   ]
 }

@@ -23,6 +23,10 @@ export interface Submission {
 }
 export type Time = bigint;
 export interface _SERVICE {
+  'getAllCustomerContacts' : ActorMethod<
+    [],
+    Array<[string, string, string, string]>
+  >,
   'getAllSubmissions' : ActorMethod<[], Array<Submission>>,
   'getSubmission' : ActorMethod<[string], [] | [Submission]>,
   'submitAirConditioner' : ActorMethod<

@@ -5,6 +5,7 @@ import SubmitAC from './pages/SubmitAC';
 import SubmissionSuccess from './pages/SubmissionSuccess';
 import PricingInfo from './pages/PricingInfo';
 import Contact from './pages/Contact';
+import Admin from './pages/Admin';
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -40,12 +41,19 @@ const contactRoute = createRoute({
   component: Contact,
 });
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: Admin,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   submitRoute,
   successRoute,
   pricingRoute,
   contactRoute,
+  adminRoute,
 ]);
 
 const router = createRouter({ routeTree });

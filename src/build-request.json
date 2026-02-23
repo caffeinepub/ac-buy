@@ -1,37 +1,41 @@
 {
   "kind": "build_request",
-  "title": "Update contact phone numbers in footer",
+  "title": "Deploy application to Internet Computer mainnet",
   "projectName": "AC Buy",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-9",
-      "text": "Update the footer contact phone number list in the Layout component to display the three phone numbers: 889700937, 6304843930, and +917095510215, replacing the existing phone number entry",
-      "target": "frontend",
+      "id": "REQ-18",
+      "text": "Deploy the application to the Internet Computer mainnet so it is publicly accessible with a permanent canister URL that can be shared with customers",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-final"
         ],
         "quotes": [
-          "Contact 889700937\n6304843930\n+917095510215"
+          "Ok go live",
+          "Please give me my website link so that I can share to my customers"
         ]
       },
       "acceptanceCriteria": [
-        "The footer displays all three phone numbers: 889700937, 6304843930, and +917095510215",
-        "The phone numbers are displayed in a clear, readable format in the contact information section",
-        "Each phone number is clickable with a tel: link for mobile convenience",
-        "The styling matches the existing footer contact information design"
+        "Application is deployed to Internet Computer mainnet (not local replica)",
+        "A permanent canister URL is generated in the format https://[canister-id].icp0.io or https://[canister-id].raw.icp0.io",
+        "The URL is publicly accessible and can be shared with customers",
+        "All existing features function correctly on mainnet including customer submission form, pricing information, contact page, and authenticated admin dashboard",
+        "Internet Identity authentication works on mainnet for admin dashboard access",
+        "Customer submissions are persisted on mainnet storage"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the frontend/src/components/Layout.tsx file structure or navigation elements",
-    "Maintain the existing footer design and layout"
+    "Must deploy to Internet Computer mainnet, not local development environment",
+    "Must preserve all existing functionality including Internet Identity authentication",
+    "Must not modify any application code - this is purely a deployment request"
   ],
   "nonGoals": [
-    "Changing the ContactInfo component on the Contact page",
-    "Adding email addresses or other contact methods",
-    "Modifying the header or navigation"
+    "Making any code changes or adding new features",
+    "Modifying the application logic or user interface",
+    "Changing authentication or data storage mechanisms"
   ],
   "imageRequirements": {
     "required": [],

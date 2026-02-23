@@ -2,6 +2,8 @@ import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Iter "mo:core/Iter";
+import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
 
 actor {
   type Condition = {
@@ -45,11 +47,27 @@ actor {
     true;
   };
 
-  public query ({ caller }) func getSubmission(id : Text) : async ?Submission {
+  public shared ({ caller }) func getSubmission(id : Text) : async ?Submission {
+    assertIsAuthenticated(caller);
     submissions.get(id);
   };
 
-  public query ({ caller }) func getAllSubmissions() : async [Submission] {
+  public shared ({ caller }) func getAllSubmissions() : async [Submission] {
+    assertIsAuthenticated(caller);
     submissions.values().toArray();
+  };
+
+  public shared ({ caller }) func getAllCustomerContacts() : async [(Text, Text, Text, Text)] {
+    submissions.values().map(
+      func(submission) {
+        (submission.customerName, submission.phone, submission.email, submission.brand.concat(" ").concat(submission.model));
+      }
+    ).toArray();
+  };
+
+  func assertIsAuthenticated(caller : Principal) {
+    if (caller.isAnonymous()) {
+      Runtime.trap("You must be authenticated through Internet Identity to access this route. Please log in and try again.");
+    };
   };
 };
