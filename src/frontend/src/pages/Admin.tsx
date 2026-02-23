@@ -7,9 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Mail, Phone, Calendar, Package, Shield, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Condition } from '@/backend';
+import { Condition, type Submission } from '@/backend';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-export default function Admin() {
+function AdminContent() {
   const { identity, login, loginStatus, isLoggingIn } = useInternetIdentity();
   const { data: submissions, isLoading, error, refetch, isRefetching } = useGetAllSubmissions();
 
@@ -18,36 +19,55 @@ export default function Admin() {
 
   // Helper function to format condition enum to readable text
   const formatCondition = (condition: Condition): string => {
-    switch (condition) {
-      case Condition.new_:
-        return 'Brand New';
-      case Condition.excellent:
-        return 'Excellent';
-      case Condition.good:
-        return 'Good';
-      case Condition.average:
-        return 'Average';
-      case Condition.poor:
-        return 'Poor';
-      default:
-        return String(condition);
+    try {
+      switch (condition) {
+        case Condition.new_:
+          return 'Brand New';
+        case Condition.excellent:
+          return 'Excellent';
+        case Condition.good:
+          return 'Good';
+        case Condition.average:
+          return 'Average';
+        case Condition.poor:
+          return 'Poor';
+        default:
+          console.warn('[Admin] Unknown condition value:', condition);
+          return String(condition);
+      }
+    } catch (err) {
+      console.error('[Admin] Error formatting condition:', {
+        timestamp: new Date().toISOString(),
+        condition,
+        error: err
+      });
+      return 'Unknown';
     }
   };
 
   // Helper function to get badge variant based on condition
   const getConditionVariant = (condition: Condition): 'default' | 'secondary' | 'outline' | 'destructive' => {
-    switch (condition) {
-      case Condition.new_:
-      case Condition.excellent:
-        return 'default';
-      case Condition.good:
-        return 'secondary';
-      case Condition.average:
-        return 'outline';
-      case Condition.poor:
-        return 'destructive';
-      default:
-        return 'outline';
+    try {
+      switch (condition) {
+        case Condition.new_:
+        case Condition.excellent:
+          return 'default';
+        case Condition.good:
+          return 'secondary';
+        case Condition.average:
+          return 'outline';
+        case Condition.poor:
+          return 'destructive';
+        default:
+          return 'outline';
+      }
+    } catch (err) {
+      console.error('[Admin] Error getting condition variant:', {
+        timestamp: new Date().toISOString(),
+        condition,
+        error: err
+      });
+      return 'outline';
     }
   };
 
@@ -95,10 +115,39 @@ export default function Admin() {
     );
   }
 
-  // Sort submissions by timestamp descending (most recent first)
-  const sortedSubmissions = submissions
-    ? [...submissions].sort((a, b) => Number(b.timestamp - a.timestamp))
-    : [];
+  // Safe data transformation with error handling
+  const sortedSubmissions = (() => {
+    try {
+      if (!submissions || !Array.isArray(submissions)) {
+        console.warn('[Admin] No submissions or invalid data format', {
+          timestamp: new Date().toISOString(),
+          submissions
+        });
+        return [];
+      }
+
+      return [...submissions].sort((a, b) => {
+        try {
+          return Number(b.timestamp - a.timestamp);
+        } catch (err) {
+          console.error('[Admin] Error sorting submissions:', {
+            timestamp: new Date().toISOString(),
+            error: err,
+            submissionA: a,
+            submissionB: b
+          });
+          return 0;
+        }
+      });
+    } catch (err) {
+      console.error('[Admin] Error processing submissions:', {
+        timestamp: new Date().toISOString(),
+        error: err,
+        submissions
+      });
+      return [];
+    }
+  })();
 
   if (isLoading) {
     return (
@@ -136,7 +185,12 @@ export default function Admin() {
           
           <div className="flex gap-3">
             <Button
-              onClick={() => refetch()}
+              onClick={() => {
+                console.log('[Admin] Manual retry triggered', {
+                  timestamp: new Date().toISOString()
+                });
+                refetch();
+              }}
               disabled={isRefetching}
               variant="default"
               className="flex-1"
@@ -178,14 +232,96 @@ export default function Admin() {
   }
 
   const formatDate = (timestamp: bigint) => {
-    const date = new Date(Number(timestamp) / 1000000);
-    return date.toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    try {
+      const date = new Date(Number(timestamp) / 1000000);
+      return date.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch (err) {
+      console.error('[Admin] Error formatting date:', {
+        timestamp: new Date().toISOString(),
+        timestampValue: timestamp,
+        error: err
+      });
+      return 'Invalid date';
+    }
+  };
+
+  // Safe submission row renderer with field-level error handling
+  const renderSubmissionRow = (submission: Submission, index: number) => {
+    try {
+      return (
+        <TableRow key={index}>
+          <TableCell className="font-medium">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">{formatDate(submission.timestamp)}</span>
+            </div>
+          </TableCell>
+          <TableCell className="font-medium">
+            {submission.customerName || 'N/A'}
+          </TableCell>
+          <TableCell>
+            {submission.phone ? (
+              <a
+                href={`tel:${submission.phone}`}
+                className="flex items-center gap-2 text-primary hover:underline"
+              >
+                <Phone className="h-4 w-4" />
+                {submission.phone}
+              </a>
+            ) : (
+              'N/A'
+            )}
+          </TableCell>
+          <TableCell>
+            {submission.email ? (
+              <a
+                href={`mailto:${submission.email}`}
+                className="flex items-center gap-2 text-primary hover:underline break-all"
+              >
+                <Mail className="h-4 w-4 flex-shrink-0" />
+                {submission.email}
+              </a>
+            ) : (
+              'N/A'
+            )}
+          </TableCell>
+          <TableCell>{submission.brand || 'N/A'}</TableCell>
+          <TableCell>{submission.model || 'N/A'}</TableCell>
+          <TableCell>{submission.age ? `${Number(submission.age)} years` : 'N/A'}</TableCell>
+          <TableCell>
+            <Badge variant={getConditionVariant(submission.condition)}>
+              {formatCondition(submission.condition)}
+            </Badge>
+          </TableCell>
+        </TableRow>
+      );
+    } catch (err) {
+      console.error('[Admin] Error rendering submission row:', {
+        timestamp: new Date().toISOString(),
+        index,
+        submission,
+        error: err,
+        errorMessage: err instanceof Error ? err.message : String(err),
+        errorStack: err instanceof Error ? err.stack : undefined
+      });
+      
+      return (
+        <TableRow key={index} className="bg-destructive/5">
+          <TableCell colSpan={8} className="text-center text-sm text-destructive">
+            <div className="flex items-center justify-center gap-2 py-2">
+              <AlertCircle className="h-4 w-4" />
+              <span>Error displaying submission #{index + 1}</span>
+            </div>
+          </TableCell>
+        </TableRow>
+      );
+    }
   };
 
   return (
@@ -202,7 +338,12 @@ export default function Admin() {
           </div>
           
           <Button
-            onClick={() => refetch()}
+            onClick={() => {
+              console.log('[Admin] Refresh button clicked', {
+                timestamp: new Date().toISOString()
+              });
+              refetch();
+            }}
             disabled={isRefetching}
             variant="outline"
             size="sm"
@@ -252,43 +393,9 @@ export default function Admin() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {sortedSubmissions.map((submission, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">{formatDate(submission.timestamp)}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium">{submission.customerName}</TableCell>
-                        <TableCell>
-                          <a
-                            href={`tel:${submission.phone}`}
-                            className="flex items-center gap-2 text-primary hover:underline"
-                          >
-                            <Phone className="h-4 w-4" />
-                            {submission.phone}
-                          </a>
-                        </TableCell>
-                        <TableCell>
-                          <a
-                            href={`mailto:${submission.email}`}
-                            className="flex items-center gap-2 text-primary hover:underline break-all"
-                          >
-                            <Mail className="h-4 w-4 flex-shrink-0" />
-                            {submission.email}
-                          </a>
-                        </TableCell>
-                        <TableCell>{submission.brand}</TableCell>
-                        <TableCell>{submission.model}</TableCell>
-                        <TableCell>{Number(submission.age)} years</TableCell>
-                        <TableCell>
-                          <Badge variant={getConditionVariant(submission.condition)}>
-                            {formatCondition(submission.condition)}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {sortedSubmissions.map((submission, index) => 
+                      renderSubmissionRow(submission, index)
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -297,5 +404,26 @@ export default function Admin() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function Admin() {
+  return (
+    <ErrorBoundary 
+      fallbackMessage="An error occurred while displaying the admin dashboard"
+      onError={(error, errorInfo) => {
+        console.error('[Admin] ErrorBoundary caught error:', {
+          timestamp: new Date().toISOString(),
+          error: {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          },
+          componentStack: errorInfo.componentStack,
+        });
+      }}
+    >
+      <AdminContent />
+    </ErrorBoundary>
   );
 }

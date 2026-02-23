@@ -4,8 +4,7 @@ import Time "mo:core/Time";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-
-
+import Debug "mo:core/Debug";
 
 actor {
   type Condition = {
@@ -45,24 +44,30 @@ actor {
   ) : async SubmissionResult {
     // Validate inputs
     if (brand == "" or model == "") {
-      return #error("Brand and model must not be empty");
+      let validationError = "Brand and model must not be empty";
+      Debug.print("Validation failed: " # validationError);
+      return #error(validationError);
     };
 
     if (age > 100) {
-      return #error("Age appears invalid. Please check your input");
+      let validationError = "Age appears invalid (greater than 100). Please check your input";
+      Debug.print("Validation failed: " # validationError);
+      return #error(validationError);
     };
 
     if (customerName == "" or phone == "") {
-      return #error("Must provide all required customer details (name & phone number)");
+      let validationError = "Must provide all required customer details (name & phone number)";
+      Debug.print("Validation failed: " # validationError);
+      return #error(validationError);
     };
 
-    // Check for duplicates based on brand, model, and customer
     let submissionKey = brand.concat(model).concat(customerName);
     if (submissions.get(submissionKey) != null) {
-      return #error("AC has already been submitted with these details. Please check your inputs");
+      let duplicateError = "AC has already been submitted with these details (brand, model, customer). Please check your inputs";
+      Debug.print("Duplicate submission attempt: " # duplicateError);
+      return #error(duplicateError);
     };
 
-    // Create and store new submission
     let newSubmission : Submission = {
       brand;
       model;
@@ -75,7 +80,10 @@ actor {
     };
 
     submissions.add(submissionKey, newSubmission);
-    #success("Validated submission received, successfully stored entry.");
+    let successMsg = "Validated submission received and successfully stored with key " # submissionKey;
+    Debug.print("Submission stored successfully: " # successMsg);
+
+    #success(successMsg);
   };
 
   public shared ({ caller }) func getSubmission(id : Text) : async ?Submission {
@@ -90,11 +98,12 @@ actor {
 
   public shared ({ caller }) func getAllCustomerContacts() : async [(Text, Text, Text, Text)] {
     assertIsAuthenticated(caller);
-    submissions.values().map(
+    let contacts = submissions.values().map(
       func(submission) {
         (submission.customerName, submission.phone, submission.email, submission.brand.concat(" ").concat(submission.model));
       }
     ).toArray();
+    contacts;
   };
 
   func assertIsAuthenticated(caller : Principal) {
@@ -102,6 +111,8 @@ actor {
       Runtime.trap(
         "You must be authenticated through Internet Identity to access this route. Please log in and try again.",
       );
+    } else {
+      Debug.print("Authenticated principal: " # debug_show (caller));
     };
   };
 };

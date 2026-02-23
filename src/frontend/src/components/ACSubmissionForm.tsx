@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useACSubmission } from '@/hooks/useACSubmission';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, WifiOff, Clock } from 'lucide-react';
 import { Condition } from '@/backend';
 
 export default function ACSubmissionForm() {
@@ -75,11 +75,16 @@ export default function ACSubmissionForm() {
     });
 
     if (!validateForm()) {
-      console.warn('[ACSubmissionForm] Form validation failed', errors);
+      console.warn('[ACSubmissionForm] Form validation failed', {
+        timestamp: new Date().toISOString(),
+        errors
+      });
       return;
     }
 
     try {
+      console.log('[ACSubmissionForm] Calling submitAC with validated data');
+      
       const success = await submitAC({
         brand: formData.brand.trim(),
         model: formData.model.trim(),
@@ -94,7 +99,6 @@ export default function ACSubmissionForm() {
         console.log('[ACSubmissionForm] Submission successful, navigating to success page with contact details');
         navigate({ 
           to: '/success',
-          // Pass customer details via history state
           state: {
             customerName: formData.customerName.trim(),
             phone: formData.phone.trim(),
@@ -102,10 +106,26 @@ export default function ACSubmissionForm() {
           } as any
         });
       } else {
-        console.error('[ACSubmissionForm] Submission failed (returned false)');
+        console.error('[ACSubmissionForm] Submission failed (returned false)', {
+          timestamp: new Date().toISOString(),
+          error: error || 'Unknown error'
+        });
       }
     } catch (err) {
-      console.error('[ACSubmissionForm] Unexpected error during submission:', err);
+      console.error('[ACSubmissionForm] Unexpected error during submission:', {
+        timestamp: new Date().toISOString(),
+        error: err,
+        errorType: typeof err,
+        errorName: err instanceof Error ? err.name : 'Unknown',
+        errorMessage: err instanceof Error ? err.message : String(err),
+        errorStack: err instanceof Error ? err.stack : undefined,
+        formData: {
+          brand: formData.brand,
+          model: formData.model,
+          age: formData.age,
+          condition: formData.condition,
+        }
+      });
     }
   };
 
@@ -114,6 +134,37 @@ export default function ACSubmissionForm() {
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
+  };
+
+  // Determine error type for better UI feedback
+  const getErrorIcon = () => {
+    if (!error) return null;
+    
+    if (error.includes('timeout') || error.includes('timed out')) {
+      return <Clock className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />;
+    }
+    if (error.includes('network') || error.includes('connection') || error.includes('fetch')) {
+      return <WifiOff className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />;
+    }
+    return <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />;
+  };
+
+  const getErrorType = () => {
+    if (!error) return 'Error';
+    
+    if (error.includes('timeout') || error.includes('timed out')) {
+      return 'Request Timeout';
+    }
+    if (error.includes('network') || error.includes('connection') || error.includes('fetch')) {
+      return 'Network Error';
+    }
+    if (error.includes('validation') || error.includes('invalid')) {
+      return 'Validation Error';
+    }
+    if (error.includes('duplicate') || error.includes('already')) {
+      return 'Duplicate Submission';
+    }
+    return 'Submission Error';
   };
 
   return (
@@ -275,13 +326,27 @@ export default function ACSubmissionForm() {
       {error && (
         <div className="p-4 bg-destructive/10 border border-destructive rounded-md">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+            {getErrorIcon()}
             <div className="flex-1">
-              <p className="text-sm font-medium text-destructive mb-1">Submission Error</p>
+              <p className="text-sm font-medium text-destructive mb-1">{getErrorType()}</p>
               <p className="text-sm text-destructive/90">{error}</p>
-              <p className="text-xs text-destructive/70 mt-2">
-                If the problem persists, please contact support or try again later.
-              </p>
+              <div className="mt-3 text-xs text-destructive/70 space-y-1">
+                {error.includes('timeout') && (
+                  <p>• The request took too long to complete. Please try again.</p>
+                )}
+                {error.includes('network') && (
+                  <>
+                    <p>• Check your internet connection</p>
+                    <p>• Verify you can access other websites</p>
+                  </>
+                )}
+                {error.includes('duplicate') && (
+                  <p>• This AC has already been submitted. Please check your previous submissions.</p>
+                )}
+                {!error.includes('timeout') && !error.includes('network') && !error.includes('duplicate') && (
+                  <p>• If the problem persists, please contact support or try again later.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>

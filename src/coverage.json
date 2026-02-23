@@ -1,56 +1,97 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T23:15:22.768Z",
+  "generatedAt": "2026-02-23T23:25:16.787Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 6,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-47",
-        "summary": "Fix the Admin Dashboard authentication logic in frontend/src/components/Layout.tsx to check if the user is already authenticated before calling login(). If the user is already authenticated, navigate directly to /admin without triggering a new authentication flow.",
+        "id": "REQ-50",
+        "summary": "Add comprehensive error logging in the frontend ACSubmissionForm.tsx component to capture and log the exact error message, error type, and full error object to the browser console when the quote submission fails, including any backend rejection reasons or network errors",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/components/ACSubmissionForm.tsx",
+          "frontend/src/hooks/useACSubmission.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/components/ACSubmissionForm.tsx",
+          "frontend/src/hooks/useACSubmission.ts"
         ]
       },
       {
-        "id": "REQ-48",
-        "summary": "Update the Admin Dashboard click handler in frontend/src/components/Layout.tsx to add a conditional check: if isAuthenticated is true, skip the login() call and navigate directly to /admin using navigate('/admin').",
+        "id": "REQ-51",
+        "summary": "Add detailed error logging in the backend submitAC function in backend/main.mo to log validation failures, duplicate submission checks, and any storage operation errors, ensuring error messages are descriptive and returned to the frontend",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-52",
+        "summary": "Debug and fix the Admin.tsx page getAllSubmissions query error by adding comprehensive error handling in the useQueries.ts hook to catch specific backend errors (authentication failures, canister errors, network timeouts) and display actionable error messages to the user",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Admin.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Admin.tsx"
         ]
       },
       {
-        "id": "REQ-49",
-        "summary": "Add error handling in the Admin Dashboard click handler to catch and display a user-friendly error message when the authentication system detects that a user is already authenticated but login() is called anyway.",
+        "id": "REQ-53",
+        "summary": "Add error boundary and try-catch blocks in the Admin.tsx page component to catch any rendering errors or data transformation errors when displaying customer contact details, logging the full error stack trace to the console",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/Admin.tsx",
+          "frontend/src/components/ErrorBoundary.tsx",
+          "frontend/src/pages/Admin.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/Admin.tsx",
+          "frontend/src/components/ErrorBoundary.tsx",
+          "frontend/src/pages/Admin.tsx"
+        ]
+      },
+      {
+        "id": "REQ-54",
+        "summary": "Verify and fix the backend getAllCustomerContacts function in backend/main.mo to ensure it correctly retrieves all customer contact details (name, phone, email) and handles the assertIsAuthenticated check without rejecting legitimate authenticated principals",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-55",
+        "summary": "Add network error handling in the useActor.ts hook to detect and handle canister communication failures, including timeout errors, connection refused errors, and invalid canister ID errors, displaying user-friendly error messages",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useActor.ts",
+          "frontend/src/components/ACSubmissionForm.tsx",
+          "frontend/src/pages/Admin.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ACSubmissionForm.tsx",
+          "frontend/src/pages/Admin.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/ACSubmissionForm.tsx",
+    "frontend/src/components/ErrorBoundary.tsx",
+    "frontend/src/hooks/useACSubmission.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/Admin.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

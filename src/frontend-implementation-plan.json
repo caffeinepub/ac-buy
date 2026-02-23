@@ -1,56 +1,99 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix authentication error when user is already authenticated on Admin Dashboard",
+  "title": "Debug and fix quote submission and admin dashboard contact details errors",
   "requirements": [
     {
-      "id": "REQ-47",
-      "summary": "Fix the Admin Dashboard authentication logic to check if the user is already authenticated before calling login()",
+      "id": "REQ-50",
+      "summary": "Add comprehensive error logging in ACSubmissionForm.tsx to capture and display detailed error information when quote submission fails",
       "acceptanceCriteria": [
-        "When an authenticated user clicks the Admin Dashboard button, they are immediately navigated to /admin without triggering a login dialog",
-        "The 'authentication failed user already authenticated' error no longer appears",
-        "Unauthenticated users still see the login dialog when clicking Admin Dashboard",
-        "Console logs show the authentication status is properly checked before calling login()"
+        "Console logs display the complete error object when submission fails",
+        "Error message includes the error type (network, validation, backend rejection)",
+        "User sees a specific error message in the UI describing what went wrong"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Layout.tsx",
+          "path": "frontend/src/components/ACSubmissionForm.tsx",
           "operation": "modify",
-          "description": "Update the handleAdminClick function to check isAuthenticated state before calling login(). If isAuthenticated is true, navigate directly to /admin using navigate('/admin'). If false, proceed with the existing login() flow. Add console logging to track authentication status checks."
+          "description": "Enhance error handling in the form submission handler to capture and log the full error object, error type, and backend rejection reasons. Add structured console logging with error.name, error.message, and the complete error stack. Update the UI error display to show specific error messages distinguishing between network errors, validation failures, and backend rejections. Include timestamp and submission data context in error logs for debugging."
+        },
+        {
+          "path": "frontend/src/hooks/useACSubmission.ts",
+          "operation": "modify",
+          "description": "Add comprehensive error logging in the mutation error handler to capture the exact error message, error type, and full error object. Log backend rejection reasons from the SubmissionResult error variant. Implement error classification to distinguish between network errors, canister errors, and validation errors. Return structured error information to the calling component for display."
         }
       ]
     },
     {
-      "id": "REQ-48",
-      "summary": "Update the Admin Dashboard click handler to add a conditional check for isAuthenticated state",
+      "id": "REQ-52",
+      "summary": "Debug and fix Admin.tsx getAllSubmissions query error by adding comprehensive error handling to catch and display specific backend errors",
       "acceptanceCriteria": [
-        "The handleAdminClick function checks the isAuthenticated state before attempting login",
-        "When isAuthenticated is true, the function immediately calls navigate('/admin')",
-        "When isAuthenticated is false, the function calls login() as before",
-        "The authentication status check is logged to the console for debugging"
+        "Admin dashboard displays specific error messages when getAllSubmissions fails",
+        "Error messages distinguish between authentication errors, network errors, and backend errors",
+        "User is provided with retry functionality or troubleshooting steps"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Layout.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Refactor the handleAdminClick function to implement early return pattern: check if isAuthenticated is true first, then immediately call navigate('/admin') and return. Otherwise, proceed with the existing login() call. Add detailed console.log statements showing the authentication status and chosen path."
+          "description": "Add comprehensive error handling in the getAllSubmissions query to catch and classify specific error types including authentication failures, canister communication errors, and network timeouts. Implement error parsing to extract meaningful error messages from rejected promises. Log the full error object with context about the query state. Return structured error information that includes error type classification and actionable troubleshooting guidance."
+        },
+        {
+          "path": "frontend/src/pages/Admin.tsx",
+          "operation": "modify",
+          "description": "Enhance error display in the Admin dashboard to show specific error messages from the getAllSubmissions query. Add error type detection to distinguish between authentication errors (suggesting re-login), network errors (suggesting retry), and backend errors (suggesting checking deployment). Implement a retry button with comprehensive error logging. Add fallback UI for different error scenarios with actionable user guidance."
         }
       ]
     },
     {
-      "id": "REQ-49",
-      "summary": "Add error handling in the Admin Dashboard click handler to catch and display user-friendly error messages",
+      "id": "REQ-53",
+      "summary": "Add error boundary and try-catch blocks in Admin.tsx to catch rendering and data transformation errors when displaying customer contact details",
       "acceptanceCriteria": [
-        "If login() throws an error indicating the user is already authenticated, the error is caught and logged",
-        "A user-friendly toast notification or error message is displayed explaining the situation",
-        "The user is still navigated to /admin despite the error",
-        "The error does not prevent access to the admin dashboard"
+        "Rendering errors are caught and logged with full stack trace",
+        "User sees a fallback UI when data display fails",
+        "Console logs include information about which data field caused the error"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Layout.tsx",
+          "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Wrap the login() call in a try-catch block. In the catch block, check if the error message indicates the user is already authenticated. If so, log the error with console.warn, display a toast notification explaining the situation, and navigate to /admin anyway. For other errors, re-throw or handle appropriately."
+          "description": "Add try-catch blocks around data transformation logic when mapping submission data for table display. Implement field-level error handling to catch errors when accessing customerName, phone, email, and other properties. Log the full error stack trace with context about which data field or row caused the error. Add defensive checks for null/undefined values before rendering. Display a fallback UI row when individual submission data cannot be rendered, showing which field failed."
+        },
+        {
+          "path": "frontend/src/components/ErrorBoundary.tsx",
+          "operation": "create",
+          "description": "Create a React Error Boundary component that catches rendering errors in child components. Implement componentDidCatch to log the full error stack trace, component stack, and error info to the console. Display a user-friendly fallback UI with error details and a retry button. Include props to customize the fallback message and allow parent components to handle errors."
+        },
+        {
+          "path": "frontend/src/pages/Admin.tsx",
+          "operation": "modify",
+          "description": "Wrap the admin dashboard table and submission display components with the ErrorBoundary component to catch any rendering errors. Configure the error boundary with appropriate fallback messaging for the admin context. Ensure error boundaries are placed strategically to isolate failures without breaking the entire page."
+        }
+      ]
+    },
+    {
+      "id": "REQ-55",
+      "summary": "Add network error handling in useActor.ts to detect and handle canister communication failures with user-friendly error messages",
+      "acceptanceCriteria": [
+        "Network timeouts display a specific timeout error message",
+        "Connection failures show a connectivity troubleshooting message",
+        "Invalid canister errors direct user to check deployment status"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Add comprehensive error handling when creating the actor instance to detect canister communication failures. Implement error classification for timeout errors, connection refused errors, and invalid canister ID errors. Log detailed error information including the error type, canister ID, and network status. Provide error context to consuming components so they can display appropriate user-friendly messages for each error type (timeouts, connectivity issues, deployment problems)."
+        },
+        {
+          "path": "frontend/src/components/ACSubmissionForm.tsx",
+          "operation": "modify",
+          "description": "Add network error detection and user-friendly error message display in the form submission handler. Check for timeout errors and display a specific 'Request timed out, please try again' message. For connection failures, display troubleshooting guidance about checking internet connectivity. For invalid canister errors, direct users to verify deployment status. Include these network error checks in the existing error handling flow."
+        },
+        {
+          "path": "frontend/src/pages/Admin.tsx",
+          "operation": "modify",
+          "description": "Add network error detection in the admin dashboard when fetching submissions. Display specific error messages for timeout scenarios ('Request timed out - click retry'), connection failures ('Unable to connect to backend - check your internet connection'), and canister communication errors ('Backend canister unavailable - verify deployment'). Implement a retry mechanism that logs retry attempts and network status."
         }
       ]
     }

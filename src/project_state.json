@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 33,
+  "projectStateVersion": 35,
   "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
   "architectural_notes": [
     "Admin dashboard currently has no authentication - publicly accessible by anyone who visits /admin route"
   ],
   "known_issues": [
-    "Owner contact details are not appearing when customer submits quote",
-    "Admin Dashboard showing 'authentication failed user already authenticated' error when clicking the login button"
+    "Error occurring when customers submit quote form",
+    "Error occurring when checking customer contact details in admin dashboard"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -322,6 +322,38 @@
         "REQ-49"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-logging-in-the-frontend-acsubmissionform-tsx-component-to-capture-and-log-the-exact-error-message-error-type-and-full-error-object-to-the-browser-console-when-the-quote-submission-fails-including-any-backend-rejection-reasons-or-network-errors",
+      "title": "Add comprehensive error logging in the frontend ACSubmissionForm.tsx component to capture and log the exact error message, error type, and full error object to the browser console when the quote submission fails, including any backend rejection reasons or network errors",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-debug-and-fix-the-admin-tsx-page-getallsubmissions-query-error-by-adding-comprehensive-error-handling-in-the-usequeries-ts-hook-to-catch-specific-backend-errors-authentication-failures-canister-errors-network-timeouts-and-display-actionable-error-messages-to-the-user",
+      "title": "Debug and fix the Admin.tsx page getAllSubmissions query error by adding comprehensive error handling in the useQueries.ts hook to catch specific backend errors (authentication failures, canister errors, network timeouts) and display actionable error messages to the user",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-error-boundary-and-try-catch-blocks-in-the-admin-tsx-page-component-to-catch-any-rendering-errors-or-data-transformation-errors-when-displaying-customer-contact-details-logging-the-full-error-stack-trace-to-the-console",
+      "title": "Add error boundary and try-catch blocks in the Admin.tsx page component to catch any rendering errors or data transformation errors when displaying customer contact details, logging the full error stack trace to the console",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-network-error-handling-in-the-useactor-ts-hook-to-detect-and-handle-canister-communication-failures-including-timeout-errors-connection-refused-errors-and-invalid-canister-id-errors-displaying-user-friendly-error-messages",
+      "title": "Add network error handling in the useActor.ts hook to detect and handle canister communication failures, including timeout errors, connection refused errors, and invalid canister ID errors, displaying user-friendly error messages",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -462,6 +494,22 @@
       "summary": "Test and verify the Internet Identity AuthClient configuration in frontend/src/hooks/useInternetIdentity.ts to ensure the identity provider URL is correct and the authentication window can successfully open and communicate with the Internet Identity service",
       "reqIds": [
         "REQ-46"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Add detailed error logging in the backend submitAC function in backend/main.mo to log validation failures, duplicate submission checks, and any storage operation errors, ensuring error messages are descriptive and returned to the frontend",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Verify and fix the backend getAllCustomerContacts function in backend/main.mo to ensure it correctly retrieves all customer contact details (name, phone, email) and handles the assertIsAuthenticated check without rejecting legitimate authenticated principals",
+      "reqIds": [
+        "REQ-54"
       ],
       "status": "pending"
     }

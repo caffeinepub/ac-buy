@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-admin-dashboard-authentication-logic-in-frontend-src-components-layout-tsx-to-check-if-the-user-is-already-authenticated-before-calling-login-if-the-user-is-already-authenticated-navigate-directly-to-admin-without-triggering-a-new-authentication-flow",
-      "featureTitle": "Fix the Admin Dashboard authentication logic in frontend/src/components/Layout.tsx to check if the user is already authenticated before calling login(). If the user is already authenticated, navigate directly to /admin without triggering a new authentication flow.",
+      "featureId": "feature-add-comprehensive-error-logging-in-the-frontend-acsubmissionform-tsx-component-to-capture-and-log-the-exact-error-message-error-type-and-full-error-object-to-the-browser-console-when-the-quote-submission-fails-including-any-backend-rejection-reasons-or-network-errors",
+      "featureTitle": "Add comprehensive error logging in the frontend ACSubmissionForm.tsx component to capture and log the exact error message, error type, and full error object to the browser console when the quote submission fails, including any backend rejection reasons or network errors",
       "files": [
-        "frontend/src/components/Layout.tsx"
+        "frontend/src/components/ACSubmissionForm.tsx",
+        "frontend/src/hooks/useACSubmission.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,15 +16,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-47"
+        "REQ-50"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-admin-dashboard-click-handler-in-frontend-src-components-layout-tsx-to-add-a-conditional-check-if-isauthenticated-is-true-skip-the-login-call-and-navigate-directly-to-admin-using-navigate-admin",
-      "featureTitle": "Update the Admin Dashboard click handler in frontend/src/components/Layout.tsx to add a conditional check: if isAuthenticated is true, skip the login() call and navigate directly to /admin using navigate('/admin').",
+      "featureId": "feature-debug-and-fix-the-admin-tsx-page-getallsubmissions-query-error-by-adding-comprehensive-error-handling-in-the-usequeries-ts-hook-to-catch-specific-backend-errors-authentication-failures-canister-errors-network-timeouts-and-display-actionable-error-messages-to-the-user",
+      "featureTitle": "Debug and fix the Admin.tsx page getAllSubmissions query error by adding comprehensive error handling in the useQueries.ts hook to catch specific backend errors (authentication failures, canister errors, network timeouts) and display actionable error messages to the user",
       "files": [
-        "frontend/src/components/Layout.tsx"
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/Admin.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -33,15 +35,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-48"
+        "REQ-52"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-error-handling-in-the-admin-dashboard-click-handler-to-catch-and-display-a-user-friendly-error-message-when-the-authentication-system-detects-that-a-user-is-already-authenticated-but-login-is-called-anyway",
-      "featureTitle": "Add error handling in the Admin Dashboard click handler to catch and display a user-friendly error message when the authentication system detects that a user is already authenticated but login() is called anyway.",
+      "featureId": "feature-add-error-boundary-and-try-catch-blocks-in-the-admin-tsx-page-component-to-catch-any-rendering-errors-or-data-transformation-errors-when-displaying-customer-contact-details-logging-the-full-error-stack-trace-to-the-console",
+      "featureTitle": "Add error boundary and try-catch blocks in the Admin.tsx page component to catch any rendering errors or data transformation errors when displaying customer contact details, logging the full error stack trace to the console",
       "files": [
-        "frontend/src/components/Layout.tsx"
+        "frontend/src/components/ErrorBoundary.tsx",
+        "frontend/src/pages/Admin.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -51,7 +54,26 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-49"
+        "REQ-53"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-network-error-handling-in-the-useactor-ts-hook-to-detect-and-handle-canister-communication-failures-including-timeout-errors-connection-refused-errors-and-invalid-canister-id-errors-displaying-user-friendly-error-messages",
+      "featureTitle": "Add network error handling in the useActor.ts hook to detect and handle canister communication failures, including timeout errors, connection refused errors, and invalid canister ID errors, displaying user-friendly error messages",
+      "files": [
+        "frontend/src/components/ACSubmissionForm.tsx",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-55"
       ],
       "confidence": "high"
     }
