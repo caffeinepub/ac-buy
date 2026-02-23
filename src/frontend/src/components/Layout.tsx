@@ -9,10 +9,10 @@ export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pendingAdminNavigation, setPendingAdminNavigation] = useState(false);
   const navigate = useNavigate();
-  const { identity, clear, loginStatus, login, isLoggingIn, isInitializing, loginError } = useInternetIdentity();
+  const { identity, clear, loginStatus, login, isLoggingIn, isInitializing, isLoginError, loginError } = useInternetIdentity();
 
-  // Check if user is authenticated
-  const isAuthenticated = !!identity && loginStatus === 'success';
+  // Check if user is authenticated - identity exists and is not anonymous
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   const navigation = [
     { name: 'Home', path: '/' },
@@ -33,6 +33,7 @@ export default function Layout() {
       isAuthenticated,
       loginStatus,
       hasIdentity: !!identity,
+      isAnonymous: identity?.getPrincipal().isAnonymous(),
       pendingAdminNavigation,
       identityPrincipal: identity?.getPrincipal().toString(),
       timestamp: new Date().toISOString()
@@ -46,14 +47,18 @@ export default function Layout() {
       toast.success('Successfully authenticated!');
     }
 
-    if (pendingAdminNavigation && loginStatus === 'loginError') {
+    if (pendingAdminNavigation && isLoginError) {
       console.error('[Layout Effect] Login failed:', loginError);
       setPendingAdminNavigation(false);
       
       const errorMessage = loginError?.message || 'Authentication failed';
       
-      // Provide user-friendly error messages based on error type
-      if (errorMessage.includes('User cancelled') || errorMessage.includes('cancelled')) {
+      // Check if error is about user already being authenticated
+      if (errorMessage.includes('already authenticated')) {
+        console.log('[Layout Effect] User was already authenticated, navigating to admin anyway');
+        navigate({ to: '/admin' });
+        toast.success('Already authenticated, redirecting to admin dashboard');
+      } else if (errorMessage.includes('User cancelled') || errorMessage.includes('cancelled')) {
         toast.info('Login was cancelled');
       } else if (errorMessage.includes('network') || errorMessage.includes('Network')) {
         toast.error('Network connection failed. Please check your internet connection and try again.');
@@ -63,7 +68,7 @@ export default function Layout() {
         toast.error(`Authentication failed: ${errorMessage}`);
       }
     }
-  }, [isAuthenticated, loginStatus, pendingAdminNavigation, navigate, identity, loginError]);
+  }, [isAuthenticated, loginStatus, pendingAdminNavigation, navigate, identity, isLoginError, loginError]);
 
   const handleLogout = () => {
     console.log('[Logout] Logging out user');
@@ -80,6 +85,7 @@ export default function Layout() {
       isAuthenticated,
       loginStatus,
       hasIdentity: !!identity,
+      isAnonymous: identity?.getPrincipal().isAnonymous(),
       isLoggingIn,
       isInitializing,
       identityPrincipal: identity?.getPrincipal().toString(),
@@ -112,11 +118,10 @@ export default function Layout() {
       setPendingAdminNavigation(true);
       
       // Call login() - this will trigger the Internet Identity dialog
-      // The login() function is void and handles the flow via callbacks
-      login();
+      // The login() function is async and handles the flow via callbacks
+      await login();
       
-      console.log('[Admin Click] Login function called, Internet Identity dialog should appear now');
-      console.log('[Admin Click] Waiting for user to complete authentication in the dialog...');
+      console.log('[Admin Click] Login function completed');
       
     } catch (error) {
       console.error('[Admin Click] Unexpected error during login trigger:', {
@@ -127,7 +132,16 @@ export default function Layout() {
       });
       
       setPendingAdminNavigation(false);
-      toast.error('An unexpected error occurred. Please try again.');
+      
+      // Check if the error is about user already being authenticated
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('already authenticated')) {
+        console.log('[Admin Click] User was already authenticated, navigating to admin anyway');
+        navigate({ to: '/admin' });
+        toast.success('Already authenticated, redirecting to admin dashboard');
+      } else {
+        toast.error('An unexpected error occurred. Please try again.');
+      }
     }
   };
 

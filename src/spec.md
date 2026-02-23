@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Admin Dashboard authentication flow so the Internet Identity login dialog appears when clicking the Admin Dashboard button.
+**Goal:** Fix the authentication error that occurs when an already authenticated user clicks the Admin Dashboard button.
 
 **Planned changes:**
-- Debug and add console logging to the Admin Dashboard button click handler to identify why the login dialog is not appearing
-- Fix the Internet Identity login trigger to display the dialog immediately when unauthenticated users click Admin Dashboard
-- Add comprehensive error handling with user-friendly error messages for authentication failures
-- Verify the useInternetIdentity hook's login() function properly resolves and completes authentication
+- Add authentication status check before calling login() in the Admin Dashboard click handler
+- Navigate directly to /admin when user is already authenticated
+- Add error handling to catch and display user-friendly messages for authentication errors
+- Add console logging for debugging authentication flow
 
-**User-visible outcome:** When clicking the Admin Dashboard button while not authenticated, the Internet Identity login dialog will appear immediately, and after successful login, users will be automatically navigated to the admin dashboard.
+**User-visible outcome:** Authenticated users can access the Admin Dashboard without seeing the "authentication failed user already authenticated" error, and are navigated directly to the admin page.

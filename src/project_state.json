@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 29,
+  "projectStateVersion": 33,
   "summary": "Used air conditioner purchase website where the business buys used AC units from customers at good prices",
   "architectural_notes": [
     "Admin dashboard currently has no authentication - publicly accessible by anyone who visits /admin route"
   ],
   "known_issues": [
     "Owner contact details are not appearing when customer submits quote",
-    "Admin Dashboard login not working when clicking on it"
+    "Admin Dashboard showing 'authentication failed user already authenticated' error when clicking the login button"
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -266,6 +266,62 @@
         "REQ-41"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-console-logging-throughout-the-admin-dashboard-button-click-handler-in-frontend-src-components-layout-tsx-to-trace-the-authentication-flow-execution-including-logging-when-the-button-is-clicked-the-current-authentication-state-when-login-is-called-and-when-navigation-occurs",
+      "title": "Add comprehensive console logging throughout the Admin Dashboard button click handler in frontend/src/components/Layout.tsx to trace the authentication flow execution, including logging when the button is clicked, the current authentication state, when login() is called, and when navigation occurs",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-useinternetidentity-hook-s-login-function-in-frontend-src-hooks-useinternetidentity-ts-is-properly-initialized-and-not-returning-undefined-or-null-when-called-from-the-layout-component",
+      "title": "Verify that the useInternetIdentity hook's login() function in frontend/src/hooks/useInternetIdentity.ts is properly initialized and not returning undefined or null when called from the Layout component",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-admin-dashboard-navigation-flow-in-frontend-src-components-layout-tsx-to-ensure-the-internet-identity-login-dialog-appears-immediately-when-an-unauthenticated-user-clicks-the-admin-dashboard-button-and-only-navigate-to-admin-after-successful-authentication",
+      "title": "Fix the Admin Dashboard navigation flow in frontend/src/components/Layout.tsx to ensure the Internet Identity login dialog appears immediately when an unauthenticated user clicks the Admin Dashboard button, and only navigate to /admin after successful authentication",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-detailed-error-boundary-and-try-catch-blocks-around-the-authentication-flow-in-the-admin-dashboard-click-handler-to-catch-any-javascript-errors-authclient-initialization-failures-or-promise-rejection-errors-and-display-user-friendly-error-messages-in-the-ui",
+      "title": "Add detailed error boundary and try-catch blocks around the authentication flow in the Admin Dashboard click handler to catch any JavaScript errors, AuthClient initialization failures, or promise rejection errors, and display user-friendly error messages in the UI",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-admin-dashboard-authentication-logic-in-frontend-src-components-layout-tsx-to-check-if-the-user-is-already-authenticated-before-calling-login-if-the-user-is-already-authenticated-navigate-directly-to-admin-without-triggering-a-new-authentication-flow",
+      "title": "Fix the Admin Dashboard authentication logic in frontend/src/components/Layout.tsx to check if the user is already authenticated before calling login(). If the user is already authenticated, navigate directly to /admin without triggering a new authentication flow.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-dashboard-click-handler-in-frontend-src-components-layout-tsx-to-add-a-conditional-check-if-isauthenticated-is-true-skip-the-login-call-and-navigate-directly-to-admin-using-navigate-admin",
+      "title": "Update the Admin Dashboard click handler in frontend/src/components/Layout.tsx to add a conditional check: if isAuthenticated is true, skip the login() call and navigate directly to /admin using navigate('/admin').",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-error-handling-in-the-admin-dashboard-click-handler-to-catch-and-display-a-user-friendly-error-message-when-the-authentication-system-detects-that-a-user-is-already-authenticated-but-login-is-called-anyway",
+      "title": "Add error handling in the Admin Dashboard click handler to catch and display a user-friendly error message when the authentication system detects that a user is already authenticated but login() is called anyway.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -398,6 +454,14 @@
       "summary": "Verify that the useInternetIdentity hook's login() function in frontend/src/hooks/useInternetIdentity.ts properly initializes the AuthClient and handles the authentication callback correctly",
       "reqIds": [
         "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Test and verify the Internet Identity AuthClient configuration in frontend/src/hooks/useInternetIdentity.ts to ensure the identity provider URL is correct and the authentication window can successfully open and communicate with the Internet Identity service",
+      "reqIds": [
+        "REQ-46"
       ],
       "status": "pending"
     }

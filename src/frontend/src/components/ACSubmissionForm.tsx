@@ -94,11 +94,12 @@ export default function ACSubmissionForm() {
         console.log('[ACSubmissionForm] Submission successful, navigating to success page with contact details');
         navigate({ 
           to: '/success',
+          // Pass customer details via history state
           state: {
             customerName: formData.customerName.trim(),
             phone: formData.phone.trim(),
             email: formData.email.trim(),
-          }
+          } as any
         });
       } else {
         console.error('[ACSubmissionForm] Submission failed (returned false)');

@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-debug-the-admin-dashboard-button-click-handler-in-frontend-src-components-layout-tsx-to-identify-why-the-internet-identity-login-dialog-is-not-appearing-when-clicking-the-admin-dashboard-navigation-button",
-      "featureTitle": "Debug the Admin Dashboard button click handler in frontend/src/components/Layout.tsx to identify why the Internet Identity login dialog is not appearing when clicking the Admin Dashboard navigation button",
+      "featureId": "feature-fix-the-admin-dashboard-authentication-logic-in-frontend-src-components-layout-tsx-to-check-if-the-user-is-already-authenticated-before-calling-login-if-the-user-is-already-authenticated-navigate-directly-to-admin-without-triggering-a-new-authentication-flow",
+      "featureTitle": "Fix the Admin Dashboard authentication logic in frontend/src/components/Layout.tsx to check if the user is already authenticated before calling login(). If the user is already authenticated, navigate directly to /admin without triggering a new authentication flow.",
       "files": [
         "frontend/src/components/Layout.tsx"
       ],
@@ -15,13 +15,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-38"
+        "REQ-47"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-fix-the-internet-identity-login-trigger-in-the-admin-dashboard-navigation-flow-to-ensure-the-login-dialog-appears-immediately-when-an-unauthenticated-user-clicks-the-admin-dashboard-button",
-      "featureTitle": "Fix the Internet Identity login trigger in the Admin Dashboard navigation flow to ensure the login dialog appears immediately when an unauthenticated user clicks the Admin Dashboard button",
+      "featureId": "feature-update-the-admin-dashboard-click-handler-in-frontend-src-components-layout-tsx-to-add-a-conditional-check-if-isauthenticated-is-true-skip-the-login-call-and-navigate-directly-to-admin-using-navigate-admin",
+      "featureTitle": "Update the Admin Dashboard click handler in frontend/src/components/Layout.tsx to add a conditional check: if isAuthenticated is true, skip the login() call and navigate directly to /admin using navigate('/admin').",
       "files": [
         "frontend/src/components/Layout.tsx"
       ],
@@ -33,13 +33,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-39"
+        "REQ-48"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-comprehensive-error-handling-in-the-admin-dashboard-click-handler-to-catch-any-errors-during-the-authentication-flow-and-display-user-friendly-error-messages-when-the-login-process-fails",
-      "featureTitle": "Add comprehensive error handling in the Admin Dashboard click handler to catch any errors during the authentication flow and display user-friendly error messages when the login process fails",
+      "featureId": "feature-add-error-handling-in-the-admin-dashboard-click-handler-to-catch-and-display-a-user-friendly-error-message-when-the-authentication-system-detects-that-a-user-is-already-authenticated-but-login-is-called-anyway",
+      "featureTitle": "Add error handling in the Admin Dashboard click handler to catch and display a user-friendly error message when the authentication system detects that a user is already authenticated but login() is called anyway.",
       "files": [
         "frontend/src/components/Layout.tsx"
       ],
@@ -51,25 +51,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-40"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-verify-that-the-useinternetidentity-hook-s-login-function-is-properly-resolving-and-handling-the-authentication-callback-ensuring-it-completes-the-authentication-process-successfully",
-      "featureTitle": "Verify that the useInternetIdentity hook's login() function is properly resolving and handling the authentication callback, ensuring it completes the authentication process successfully",
-      "files": [
-        "frontend/src/components/Layout.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-41"
+        "REQ-49"
       ],
       "confidence": "high"
     }

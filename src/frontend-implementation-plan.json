@@ -1,69 +1,56 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Admin Dashboard Authentication Flow",
+  "title": "Fix authentication error when user is already authenticated on Admin Dashboard",
   "requirements": [
     {
-      "id": "REQ-38",
-      "summary": "Debug Admin Dashboard button click handler to identify why Internet Identity login dialog is not appearing",
+      "id": "REQ-47",
+      "summary": "Fix the Admin Dashboard authentication logic to check if the user is already authenticated before calling login()",
       "acceptanceCriteria": [
-        "Console logs show the exact execution flow when Admin Dashboard button is clicked",
-        "Any errors preventing the login dialog from appearing are identified and logged",
-        "The authentication state (isAuthenticated, isInitializing) values are verified at click time"
+        "When an authenticated user clicks the Admin Dashboard button, they are immediately navigated to /admin without triggering a login dialog",
+        "The 'authentication failed user already authenticated' error no longer appears",
+        "Unauthenticated users still see the login dialog when clicking Admin Dashboard",
+        "Console logs show the authentication status is properly checked before calling login()"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add comprehensive debug logging to the Admin Dashboard button click handler (handleAdminClick function). Log authentication state values (isAuthenticated, isInitializing, identity) at the start of the function. Add try-catch blocks with detailed error logging around the login() call. Log before and after each critical step: state check, login invocation, navigation attempt. Verify the login() promise resolution is properly awaited and any errors are caught and logged with full stack traces."
+          "description": "Update the handleAdminClick function to check isAuthenticated state before calling login(). If isAuthenticated is true, navigate directly to /admin using navigate('/admin'). If false, proceed with the existing login() flow. Add console logging to track authentication status checks."
         }
       ]
     },
     {
-      "id": "REQ-39",
-      "summary": "Fix Internet Identity login trigger to ensure login dialog appears immediately when clicking Admin Dashboard button",
+      "id": "REQ-48",
+      "summary": "Update the Admin Dashboard click handler to add a conditional check for isAuthenticated state",
       "acceptanceCriteria": [
-        "Clicking Admin Dashboard button when not authenticated displays the Internet Identity login dialog",
-        "The login dialog appears without requiring page refresh or navigation",
-        "After successful authentication, user is automatically navigated to /admin route"
+        "The handleAdminClick function checks the isAuthenticated state before attempting login",
+        "When isAuthenticated is true, the function immediately calls navigate('/admin')",
+        "When isAuthenticated is false, the function calls login() as before",
+        "The authentication status check is logged to the console for debugging"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Fix the handleAdminClick function to ensure the Internet Identity login dialog is triggered correctly. Verify the login() function from useInternetIdentity is being called with proper await syntax. Ensure the authentication state check (isAuthenticated) is evaluated correctly before calling login(). After successful login(), ensure navigation to '/admin' happens only after authentication completes. Remove any conditional logic that might prevent the login dialog from appearing. Ensure the loading state is set correctly to provide user feedback during the authentication process."
+          "description": "Refactor the handleAdminClick function to implement early return pattern: check if isAuthenticated is true first, then immediately call navigate('/admin') and return. Otherwise, proceed with the existing login() call. Add detailed console.log statements showing the authentication status and chosen path."
         }
       ]
     },
     {
-      "id": "REQ-40",
-      "summary": "Add comprehensive error handling in Admin Dashboard click handler with user-friendly error messages",
+      "id": "REQ-49",
+      "summary": "Add error handling in the Admin Dashboard click handler to catch and display user-friendly error messages",
       "acceptanceCriteria": [
-        "All errors during authentication are caught and logged to console with full details",
-        "User sees a toast or alert message if login fails with actionable guidance",
-        "Network errors, timeout errors, and user cancellation are handled gracefully"
+        "If login() throws an error indicating the user is already authenticated, the error is caught and logged",
+        "A user-friendly toast notification or error message is displayed explaining the situation",
+        "The user is still navigated to /admin despite the error",
+        "The error does not prevent access to the admin dashboard"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Wrap the entire handleAdminClick authentication flow in a try-catch block that catches and logs all errors with full stack traces. Add specific error handling for different error types: network errors (show 'Network connection failed' message), timeout errors (show 'Login timed out' message), user cancellation (show 'Login cancelled' message or handle silently), and generic errors (show 'Authentication failed' message). Display user-friendly error messages using browser alert or console.error with actionable guidance. Ensure the loading state is reset to false in a finally block so the UI recovers from errors."
-        }
-      ]
-    },
-    {
-      "id": "REQ-41",
-      "summary": "Verify useInternetIdentity hook's login() function properly resolves and completes authentication",
-      "acceptanceCriteria": [
-        "The login() function completes without throwing unhandled errors",
-        "Authentication state updates correctly after successful login",
-        "The authenticated principal is properly stored and accessible after login"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "modify",
-          "description": "After calling login() in handleAdminClick, add verification logging to confirm the authentication state has updated correctly. Log the identity and isAuthenticated values immediately after the login() promise resolves. Add a small delay or polling mechanism (checking isAuthenticated every 100ms for up to 2 seconds) to ensure the authentication state has propagated before attempting navigation to /admin. Log the authenticated principal value to verify it was properly stored. If authentication state does not update within the timeout, log a warning and do not navigate."
+          "description": "Wrap the login() call in a try-catch block. In the catch block, check if the error message indicates the user is already authenticated. If so, log the error with console.warn, display a toast notification explaining the situation, and navigate to /admin anyway. For other errors, re-throw or handle appropriately."
         }
       ]
     }

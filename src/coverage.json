@@ -1,18 +1,18 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T23:02:40.955Z",
+  "generatedAt": "2026-02-23T23:15:22.768Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-38",
-        "summary": "Debug the Admin Dashboard button click handler in frontend/src/components/Layout.tsx to identify why the Internet Identity login dialog is not appearing when clicking the Admin Dashboard navigation button",
+        "id": "REQ-47",
+        "summary": "Fix the Admin Dashboard authentication logic in frontend/src/components/Layout.tsx to check if the user is already authenticated before calling login(). If the user is already authenticated, navigate directly to /admin without triggering a new authentication flow.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/Layout.tsx"
@@ -22,8 +22,8 @@
         ]
       },
       {
-        "id": "REQ-39",
-        "summary": "Fix the Internet Identity login trigger in the Admin Dashboard navigation flow to ensure the login dialog appears immediately when an unauthenticated user clicks the Admin Dashboard button",
+        "id": "REQ-48",
+        "summary": "Update the Admin Dashboard click handler in frontend/src/components/Layout.tsx to add a conditional check: if isAuthenticated is true, skip the login() call and navigate directly to /admin using navigate('/admin').",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/Layout.tsx"
@@ -33,19 +33,8 @@
         ]
       },
       {
-        "id": "REQ-40",
-        "summary": "Add comprehensive error handling in the Admin Dashboard click handler to catch any errors during the authentication flow and display user-friendly error messages when the login process fails",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-41",
-        "summary": "Verify that the useInternetIdentity hook's login() function is properly resolving and handling the authentication callback, ensuring it completes the authentication process successfully",
+        "id": "REQ-49",
+        "summary": "Add error handling in the Admin Dashboard click handler to catch and display a user-friendly error message when the authentication system detects that a user is already authenticated but login() is called anyway.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/Layout.tsx"
